@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>درخت‌واره دروس — برنامه‌ریز ترم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#132a2e;
+    --ink-2:#1c3a3f;
+    --paper:#f3efe4;
+    --paper-2:#ffffff;
+    --line: #d8d0bd;
+    --seal:#b5432b;
+    --gold:#c8973f;
+    --ok:#4f7a4a;
+    --ok-bg:#e7efe1;
+    --wait:#2f6c7d;
+    --wait-bg:#e2eff2;
+    --lock:#8a8175;
+    --lock-bg:#eeeae1;
+    --warn:#a3541f;
+    --warn-bg:#f6e9d8;
+    --radius: 10px;
+    --shadow: 0 1px 0 rgba(19,42,46,.06), 0 8px 24px -16px rgba(19,42,46,.35);
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(200,151,63,.10), transparent 60%),
+      var(--paper);
+    color:var(--ink);
+    font-family:'Vazirmatn', Tahoma, sans-serif;
+    line-height:1.6;
+    padding-bottom:60px;
+  }
+  .num{ font-family:'JetBrains Mono','Vazirmatn',monospace; font-variant-numeric: tabular-nums; direction:ltr; unicode-bidi: isolate; }
+
+  header.top{
+    background: linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 100%);
+    color:#f3efe4;
+    padding:28px 18px 84px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:auto -10% -60% -10%;
+    height:220px;
+    background: radial-gradient(50% 100% at 50% 0%, rgba(200,151,63,.25), transparent 70%);
+  }
+  .top-inner{ max-width:900px; margin:0 auto; position:relative; z-index:1;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12.5px; letter-spacing:.02em; color:#e7cfa0;
+    background:rgba(200,151,63,.14); border:1px solid rgba(200,151,63,.35);
+    padding:4px 10px; border-radius:999px; margin-bottom:14px;
+  }
+  h1{ font-size:26px; font-weight:800; margin:0 0 8px; letter-spacing:-.01em;}
+  header.top p{ margin:0; color:#cdd8d2; font-size:14.5px; max-width:60ch;}
+
+  .wrap{ max-width:900px; margin:-58px auto 0; padding:0 14px; position:relative; z-index:2;}
+
+  nav.tabs{
+    display:flex; gap:6px; background:var(--paper-2); border:1px solid var(--line);
+    border-radius:12px; padding:6px; box-shadow:var(--shadow); margin-bottom:18px;
+  }
+  nav.tabs button{
+    flex:1; border:0; background:transparent; padding:12px 10px; border-radius:8px;
+    font-family:inherit; font-size:14.5px; font-weight:600; color:var(--ink);
+    cursor:pointer; transition:background .15s, color .15s;
+  }
+  nav.tabs button.active{ background:var(--ink); color:#f3efe4; }
+  nav.tabs button:not(.active):hover{ background:#eee7d5;}
+
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  .summary-card{
+    background:var(--paper-2); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 18px; margin-bottom:14px; box-shadow:var(--shadow);
+  }
+  .summary-row{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:10px;}
+  .summary-row:last-child{margin-bottom:0;}
+  .summary-title{ font-weight:700; font-size:15px;}
+  .summary-num{ font-size:13.5px; color:#5a5346;}
+  .bar-track{ height:8px; border-radius:999px; background:#eae4d3; overflow:hidden; margin-top:6px;}
+  .bar-fill{ height:100%; border-radius:999px; background:linear-gradient(90deg, var(--gold), var(--seal)); transition:width .4s ease;}
+
+  .suggest-box{
+    background:var(--paper-2); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 18px; margin-bottom:18px; box-shadow:var(--shadow);
+  }
+  .suggest-box h2{ font-size:15.5px; margin:0 0 4px; display:flex; align-items:center; gap:8px;}
+  .suggest-box h2 .stamp-dot{width:9px;height:9px;border-radius:50%;background:var(--seal);display:inline-block;}
+  .suggest-sub{ font-size:12.5px; color:#726b5c; margin:0 0 12px;}
+  .suggest-list{ display:flex; flex-direction:column; gap:8px;}
+  .suggest-item{
+    display:flex; align-items:flex-start; gap:10px; padding:10px 12px;
+    border:1px solid var(--line); border-radius:8px; background:#fbf9f3;
+  }
+  .suggest-item .tag{
+    flex-shrink:0; font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px;
+    white-space:nowrap;
+  }
+  .tag.mandatory{ background:var(--warn-bg); color:var(--warn);}
+  .tag.quota{ background:var(--wait-bg); color:var(--wait);}
+  .tag.optional{ background:var(--lock-bg); color:#5c564a;}
+  .suggest-item .body{flex:1; min-width:0;}
+  .suggest-item .body .t{ font-weight:700; font-size:14px;}
+  .suggest-item .body .r{ font-size:12.5px; color:#726b5c; margin-top:2px;}
+  .suggest-empty{ font-size:13.5px; color:#726b5c; padding:6px 2px;}
+
+  details.group{
+    background:var(--paper-2); border:1px solid var(--line); border-radius:var(--radius);
+    margin-bottom:10px; box-shadow:var(--shadow); overflow:hidden;
+  }
+  details.group > summary{
+    list-style:none; cursor:pointer; padding:14px 16px; display:flex; align-items:center;
+    justify-content:space-between; gap:10px;
+  }
+  details.group > summary::-webkit-details-marker{display:none;}
+  .g-left{display:flex; flex-direction:column; gap:6px; flex:1; min-width:0;}
+  .g-title{font-weight:700; font-size:14.5px; display:flex; align-items:center; gap:8px;}
+  .g-chev{ transition:transform .18s; color:#a89f8c; flex-shrink:0;}
+  details[open] .g-chev{ transform:rotate(180deg);}
+  .g-rule{ font-size:12px; color:#8a8175;}
+  .g-progress{display:flex; align-items:center; gap:8px; min-width:120px;}
+  .g-progress .bar-track{flex:1; margin-top:0;}
+  .g-progress .g-num{font-size:12px; color:#5a5346; white-space:nowrap;}
+  .g-warn{ margin:0 16px 12px; padding:8px 10px; background:var(--warn-bg); color:var(--warn); border-radius:8px; font-size:12.5px;}
+
+  .g-body{ padding:0 12px 12px;}
+  .course{
+    display:flex; align-items:flex-start; gap:10px; padding:11px 8px;
+    border-top:1px solid #efe9d8;
+  }
+  .course:first-child{border-top:0;}
+  .course.is-passed{ background:linear-gradient(90deg, transparent, rgba(79,122,74,.05)); }
+
+  .stamp{
+    flex-shrink:0; width:30px; height:30px; border-radius:50%;
+    border:2px solid #c9c1ac; background:#fff; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .18s, border-color .18s, background .18s;
+    margin-top:1px;
+  }
+  .stamp:hover{ border-color:var(--gold);}
+  .stamp svg{ width:15px; height:15px; opacity:0; transform:scale(.5); transition:opacity .18s, transform .18s;}
+  .course.is-passed .stamp{
+    background:var(--ok); border-color:var(--ok); transform:rotate(-8deg) scale(1.04);
+  }
+  .course.is-passed .stamp svg{ opacity:1; transform:scale(1); }
+
+  .c-body{ flex:1; min-width:0;}
+  .c-top{ display:flex; align-items:center; flex-wrap:wrap; gap:8px 10px;}
+  .c-title{ font-weight:600; font-size:14.5px; cursor:pointer; }
+  .c-units{ font-size:11.5px; color:#8a8175; white-space:nowrap;}
+  .c-status{
+    font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px; white-space:nowrap;
+  }
+  .c-status.passed{ background:var(--ok-bg); color:var(--ok);}
+  .c-status.avail{ background:var(--wait-bg); color:var(--wait);}
+  .c-status.locked{ background:var(--lock-bg); color:#726b5c;}
+  .c-meta{ font-size:12px; color:#8a8175; margin-top:3px;}
+  .c-meta b{ color:#5a5346; font-weight:600;}
+  .c-note{ font-size:12px; color:var(--warn); margin-top:3px;}
+
+  .footnote{
+    max-width:900px; margin:26px auto 0; padding:0 14px; font-size:12px; color:#8a8175; line-height:1.8;
+  }
+  .footnote b{color:#5a5346;}
+
+  .toolbar{ display:flex; gap:8px; margin-bottom:14px; }
+  .toolbar button{
+    font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; padding:8px 14px;
+    border:1px solid var(--line); background:var(--paper-2); color:var(--ink); cursor:pointer;
+  }
+  .toolbar button:hover{ background:#eee7d5;}
+  .toolbar button.danger{ color:var(--seal); border-color:#e3c3ba;}
+
+  .disclaimer{
+    background:var(--warn-bg); color:#7a4113; border:1px solid #e6cda3; border-radius:var(--radius);
+    padding:12px 14px; font-size:12.5px; margin-bottom:16px; line-height:1.8;
+  }
+
+  .grade-wrap{ display:flex; align-items:center; gap:6px; margin-top:6px;}
+  .grade-wrap label{ font-size:11.5px; color:#8a8175;}
+  .grade-input{
+    width:60px; padding:4px 6px; border:1px solid var(--line); border-radius:6px;
+    font-family:'JetBrains Mono','Vazirmatn',monospace; font-size:12.5px; text-align:center;
+    background:#fff; color:var(--ink);
+  }
+  .grade-input:focus{ outline:2px solid var(--gold); outline-offset:1px;}
+
+  .summary-card.master{ border-color:#d8c9a3; background:linear-gradient(180deg,#fffdf8,#fbf6ea);}
+  .gpa-row{ margin-top:2px; padding-top:10px; border-top:1px dashed var(--line);}
+
+  @media (max-width:520px){
+    h1{font-size:22px;}
+    .g-progress{min-width:90px;}
+    .c-units{font-size:10.5px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <span class="eyebrow">● برنامه‌ریز دروس — ذخیره در همین مرورگر</span>
+    <h1>درخت‌واره دروس من</h1>
+    <p>دروسی که پاس کردی رو تیک بزن؛ برنامه خودش پیش‌نیازها رو چک می‌کنه و بهت می‌گه این ترم چی رو منطقی‌تره برداری. هیچ‌چیزی به سرور فرستاده نمی‌شه، همه‌چیز توی localStorage همین مرورگر ذخیره می‌مونه.</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="master-summary"></div>
+
+  <nav class="tabs">
+    <button class="active" data-tab="elec">برق - الکترونیک</button>
+    <button data-tab="islamic">معارف اسلامی</button>
+    <button data-tab="general">دروس عمومی</button>
+  </nav>
+
+  <div class="toolbar">
+    <button id="exportBtn">خروجی گرفتن از وضعیت</button>
+    <button id="importBtn">وارد کردن وضعیت</button>
+    <button id="resetBtn" class="danger">پاک کردن همه تیک‌ها</button>
+  </div>
+
+  <!-- ELECTRONICS PANEL -->
+  <section id="panel-elec" class="panel active">
+    <div class="disclaimer">
+      داده‌های این بخش از روی درخت‌واره «رشته مهندسی برق - گرایش الکترونیک، مصوبه ۱۷۹ مورخ ۱۴۰۳/۰۴/۱۰، دانشگاه آزاد اسلامی واحد تهران شمال» استخراج شده. چون منبع یک جدول اسکن‌شده بوده، اگه جایی با سرفصل رسمی خودت فرق داشت (مخصوصاً ردیف‌های ۶۰، ۶۱ و ۶۶ تا ۶۸ که واحدشون نامشخصه)، حتماً با گروه آموزشی چک کن.
+    </div>
+    <div id="elec-summary"></div>
+    <div id="elec-suggest"></div>
+    <div id="elec-groups"></div>
+  </section>
+
+  <!-- ISLAMIC PANEL -->
+  <section id="panel-islamic" class="panel">
+    <div class="disclaimer">
+      طبق آیین‌نامه، هر ترم (حتی ترم آخر یا تابستان) فقط <b>۲ واحد</b> معارف اسلامی مجازی، مگر با نظر مدیر گروه معارف که تا <b>۴ واحد</b> می‌شه. دانشجوی اقلیت دینی محدودیت انتخاب گرایش نداره و از «انس با قرآن کریم» معافه.
+    </div>
+    <div id="islamic-summary"></div>
+    <div id="islamic-suggest"></div>
+    <div id="islamic-groups"></div>
+  </section>
+
+  <!-- GENERAL EDUCATION PANEL -->
+  <section id="panel-general" class="panel">
+    <div class="disclaimer">
+      این بخش رو خودت مشخص کردی، نه از روی PDF. «زبان پیش‌دانشگاهی» یه واحد جبرانیه: پیش‌نیاز «زبان ترکیبی ۱»ه ولی جزو مجموع ۱۴۴ واحد فارغ‌التحصیلی حساب نمی‌شه. «انس با قرآن کریم» هم چون از قبل جزو تب معارف اسلامیه، اینجا دوباره نیومده.
+    </div>
+    <div id="general-summary"></div>
+    <div id="general-suggest"></div>
+    <div id="general-groups"></div>
+  </section>
+
+  <p class="footnote">
+    <b>نکته فنی:</b> این صفحه کاملاً استاتیکه و روی GitHub Pages/Actions قابل اجراست؛ هیچ دیتابیسی نداره و تمام تیک‌ها فقط در حافظهٔ مرورگر خودت (localStorage) ذخیره می‌شن — یعنی روی گوشی/مرورگر دیگه یا حالت ناشناس دیده نمی‌شن، مگر با دکمهٔ «خروجی/ورودی» جابه‌جاشون کنی.
+  </p>
+</div>
+
+<input type="file" id="importFile" accept="application/json" style="display:none">
+
+<script>
+/* ============================= DATA ============================= */
+
+// ---------- Electronics Engineering (Electronics track) ----------
+// id, title, t = theory units, p = practical units, pre = prerequisite ids,
+// co = corequisite ids (shown as info, not blocking), preText = external/special prereq note,
+// minTotalUnits = special condition requiring N total passed units across this dataset,
+// note = extra note, variableUnits = true when units aren't fixed in the source table.
+const ELEC_COURSES = [
+  {id:'e1', title:'ریاضی عمومی ۱', t:3, p:0, pre:[], co:[]},
+  {id:'e2', title:'ریاضی عمومی ۲', t:3, p:0, pre:['e1'], co:[]},
+  {id:'e3', title:'فیزیک عمومی ۱ (حرارت و مکانیک)', t:3, p:0, pre:[], co:[]},
+  {id:'e4', title:'فیزیک عمومی ۲ (الکتریسیته و مغناطیس)', t:3, p:0, pre:[], co:[]},
+  {id:'e5', title:'معادلات دیفرانسیل', t:3, p:0, pre:[], co:['e2']},
+  {id:'e6', title:'برنامه‌سازی کامپیوتر', t:3, p:0, pre:[], co:[]},
+  {id:'e7', title:'کارگاه عمومی', t:0, p:1, pre:[], co:[]},
+  {id:'e8', title:'آزمایشگاه فیزیک', t:0, p:1, pre:[], co:['e4']},
+
+  {id:'e9', title:'آمار و احتمال مهندسی', t:3, p:0, pre:[], co:['e2']},
+  {id:'e10', title:'زبان تخصصی', t:2, p:0, pre:[], co:[], preText:'زبان عمومی (پیش‌دانشگاهی/ترکیبی ۱-۳)، خارج از این جدول'},
+  {id:'e11', title:'روش‌های محاسباتی در مهندسی برق', t:2, p:0, pre:['e1'], co:['e6']},
+  {id:'e12', title:'کارگاه برق', t:0, p:1, pre:['e7'], co:[]},
+  {id:'e13', title:'ریاضیات مهندسی', t:3, p:0, pre:['e2','e5'], co:[]},
+  {id:'e14', title:'هوش مصنوعی و تحول دیجیتال', t:0, p:2, pre:['e6','e9'], co:[]},
+  {id:'e15', title:'مدارهای الکتریکی ۱', t:3, p:0, pre:['e4','e5'], co:[]},
+  {id:'e16', title:'مدارهای الکتریکی ۲', t:3, p:0, pre:['e15'], co:[]},
+  {id:'e17', title:'الکترومغناطیس', t:3, p:0, pre:['e2','e4'], co:[]},
+  {id:'e18', title:'سیگنال‌ها و سیستم‌ها', t:3, p:0, pre:['e13'], co:[]},
+  {id:'e19', title:'سیستم‌های کنترل خطی', t:3, p:0, pre:['e18'], co:[]},
+  {id:'e20', title:'الکترونیک ۱', t:3, p:0, pre:['e15'], co:[]},
+  {id:'e21', title:'الکترونیک ۲', t:3, p:0, pre:['e20'], co:[]},
+  {id:'e22', title:'ماشین‌های الکتریکی ۱', t:2, p:0, pre:['e15','e17'], co:[]},
+  {id:'e23', title:'ماشین‌های الکتریکی ۲', t:2, p:0, pre:['e22'], co:[]},
+  {id:'e24', title:'اصول سیستم‌های مخابراتی', t:3, p:0, pre:['e9','e18'], co:[]},
+  {id:'e25', title:'سیستم‌های انرژی الکتریکی', t:3, p:0, pre:[], co:['e23']},
+  {id:'e26', title:'مدارهای منطقی', t:3, p:0, pre:[], co:['e20']},
+  {id:'e27', title:'معماری کامپیوتر و میکروکنترلر', t:3, p:0, pre:['e26'], co:[]},
+  {id:'e28', title:'آزمایشگاه مدارهای الکتریکی و اندازه‌گیری', t:0, p:1, pre:[], co:['e16']},
+  {id:'e29', title:'آزمایشگاه ماشین‌های الکتریکی ۱', t:0, p:1, pre:['e22'], co:[]},
+  {id:'e30', title:'آزمایشگاه الکترونیک ۱', t:0, p:1, pre:['e28'], co:['e21']},
+  {id:'e31', title:'آزمایشگاه سیستم‌های کنترل خطی', t:0, p:1, pre:['e19'], co:[]},
+  {id:'e32', title:'آزمایشگاه مدارهای منطقی', t:0, p:1, pre:[], co:['e26']},
+  {id:'e33', title:'آزمایشگاه معماری کامپیوتر و میکروکنترلر', t:0, p:1, pre:['e32'], co:['e27']},
+
+  {id:'e34', title:'الکترونیک ۳', t:3, p:0, pre:['e21'], co:['e19']},
+  {id:'e35', title:'الکترونیک دیجیتال', t:3, p:0, pre:[], co:['e20']},
+  {id:'e36', title:'فیزیک الکترونیک', t:3, p:0, pre:['e4'], co:['e20']},
+  {id:'e37', title:'پروژه کارشناسی', t:3, p:0, pre:[], co:[], minTotalUnits:95},
+
+  {id:'e38', title:'مبانی الکترونیک قدرت', t:3, p:0, pre:['e21'], co:['e23']},
+  {id:'e39', title:'پردازش سیگنال‌های دیجیتال', t:3, p:0, pre:['e18'], co:[]},
+  {id:'e40', title:'مدارهای مخابراتی', t:3, p:0, pre:['e20','e24'], co:[]},
+  {id:'e41', title:'مدارهای پالس و دیجیتال', t:3, p:0, pre:['e20','e26'], co:[]},
+  {id:'e42', title:'سیستم‌های مبتنی بر FPGA', t:3, p:0, pre:['e26'], co:[]},
+  {id:'e43', title:'طراحی توأم سخت‌افزار و نرم‌افزار', t:3, p:0, pre:['e27'], co:[]},
+  {id:'e44', title:'مبانی یادگیری ماشین', t:3, p:0, pre:['e6','e9'], co:[]},
+
+  {id:'e45', title:'آزمایشگاه الکترونیک ۲', t:0, p:1, pre:['e30','e21'], co:[]},
+  {id:'e46', title:'آزمایشگاه الکترونیک ۳', t:0, p:1, pre:['e30','e34'], co:[]},
+  {id:'e47', title:'آزمایشگاه مدارهای پالس و دیجیتال', t:0, p:1, pre:['e30','e41'], co:[]},
+  {id:'e48', title:'آزمایشگاه مبانی الکترونیک قدرت', t:0, p:1, pre:['e30','e38'], co:[]},
+  {id:'e49', title:'آزمایشگاه مدارهای مخابراتی', t:0, p:1, pre:['e30','e40'], co:[]},
+  {id:'e50', title:'آزمایشگاه سیستم‌های مبتنی بر FPGA', t:0, p:1, pre:['e32'], co:['e42']},
+
+  {id:'e51', title:'کاربینی (آشنایی با مهندسی برق)', t:1, p:0, pre:[], co:[]},
+  {id:'e52', title:'کارآموزی', t:0, p:2, pre:[], co:[], minTotalUnits:90},
+  {id:'e53', title:'مهارت‌های نرم شغلی', t:2, p:0, pre:[], co:[], minTotalUnits:65},
+
+  {id:'e54', title:'اقتصاد مهندسی', t:2, p:0, pre:[], co:[]},
+  {id:'e55', title:'مبانی اقتصاد', t:2, p:0, pre:[], co:[]},
+  {id:'e56', title:'اندازه‌گیری الکتریکی', t:2, p:0, pre:['e15'], co:[]},
+  {id:'e57', title:'اخلاق مهندسی و محیط زیست', t:1, p:0, pre:[], co:[]},
+  {id:'e58', title:'فلسفه علم و فناوری', t:2, p:0, pre:[], co:[]},
+  {id:'e59', title:'فیلتر و سنتز مدار', t:3, p:0, pre:['e18','e21'], co:[]},
+  {id:'e60', title:'فیبر نوری', t:3, p:0, pre:['e17'], co:[], note:'هم‌نیاز جدول: «میدانها و امواج» — درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
+  {id:'e61', title:'کنترل ماشین‌های الکتریکی', t:3, p:0, pre:[], co:[], note:'هم‌نیاز جدول: «ماشین‌های الکتریکی ۳» — درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
+  {id:'e62', title:'سیستم‌های فیزیکی-سایبری', t:3, p:0, pre:['e27'], co:[]},
+  {id:'e63', title:'برنامه‌سازی پیشرفته', t:3, p:0, pre:['e6'], co:[]},
+  {id:'e64', title:'سیستم‌های توزیع انرژی الکتریکی', t:3, p:0, pre:['e25'], co:[]},
+  {id:'e65', title:'مبانی خودروهای برقی و ترکیبی', t:3, p:0, pre:['e23'], co:[]},
+  {id:'e66', title:'دروس و آزمایشگاه‌های سایر شاخه‌های تخصصی (مورد ۱)', t:null, p:null, pre:[], co:[], variableUnits:true},
+  {id:'e67', title:'دروس و آزمایشگاه‌های سایر شاخه‌های تخصصی (مورد ۲)', t:null, p:null, pre:[], co:[], variableUnits:true},
+  {id:'e68', title:'حداکثر دو درس از علوم و مهندسی کامپیوتر', t:null, p:null, pre:[], co:[], variableUnits:true},
+  {id:'e_defa', title:'دفاع مقدس', t:2, p:0, pre:[], co:[], note:'طبق جدول باید حتماً به‌عنوان یکی از دروس اختیاری اخذ شود.'},
+  {id:'e_karafarini', title:'کارآفرینی', t:3, p:0, pre:[], co:[], note:'جزو دروس تخصصی اختیاری محسوب می‌شود.'},
+];
+
+const ELEC_GROUPS = [
+  {id:'basic', title:'دروس پایه', rule:'همه اجباری — ۲۰ واحد', kind:'all', ids:['e1','e2','e3','e4','e5','e6','e7','e8']},
+  {id:'core', title:'دروس اصلی', rule:'همه اجباری — ۵۶ واحد', kind:'all', ids:['e9','e10','e11','e12','e13','e14','e15','e16','e17','e18','e19','e20','e21','e22','e23','e24','e25','e26','e27','e28','e29','e30','e31','e32','e33']},
+  {id:'reqspec', title:'دروس تخصصی الزامی', rule:'همه اجباری — ۱۲ واحد', kind:'all', ids:['e34','e35','e36','e37']},
+  {id:'elecTheory', title:'دروس تخصصی انتخابی — نظری', rule:'باید ۳ درس (۹ واحد) از این ۷ مورد انتخاب کنی', kind:'countMin', min:3, unitGoal:9, ids:['e38','e39','e40','e41','e42','e43','e44']},
+  {id:'elecLab', title:'دروس تخصصی انتخابی — آزمایشگاه', rule:'باید ۳ درس (۳ واحد) از این ۶ مورد انتخاب کنی', kind:'countMin', min:3, unitGoal:3, ids:['e45','e46','e47','e48','e49','e50']},
+  {id:'skills', title:'دروس مهارتی - اشتغال‌پذیری', rule:'همه اجباری — ۵ واحد', kind:'all', ids:['e51','e52','e53']},
+  {id:'electives', title:'دروس اختیاری', rule:'حداقل ۱۳ واحد از این فهرست (دفاع مقدس الزامی‌ست جزوشون باشه)', kind:'unitsMin', min:13, ids:['e54','e55','e56','e57','e58','e59','e60','e61','e62','e63','e64','e65','e66','e67','e68','e_defa','e_karafarini']},
+];
+
+// ---------- Islamic Studies electives ----------
+const ISLAMIC_COURSES = [
+  {id:'i1', title:'اندیشه اسلامی ۱ (مبدأ و معاد)', u:2, pre:[]},
+  {id:'i2', title:'اندیشه اسلامی ۲ (نبوت و امامت)', u:2, pre:['i1']},
+  {id:'i3', title:'انسان در اسلام', u:2, pre:[]},
+  {id:'i4', title:'حقوق اجتماعی و سیاسی در اسلام', u:2, pre:[]},
+
+  {id:'i5', title:'اخلاق اسلامی (مبانی و مفاهیم)', u:2, pre:[]},
+  {id:'i6', title:'اخلاق خانواده', u:2, pre:[]},
+  {id:'i7', title:'فلسفهٔ اخلاق (با تکیه بر مباحث تربیتی)', u:2, pre:[]},
+  {id:'i8', title:'آیین زندگی (اخلاق کاربردی)', u:2, pre:[]},
+  {id:'i9', title:'عرفان عملی در اسلام', u:2, pre:[]},
+
+  {id:'i10', title:'انقلاب اسلامی ایران', u:2, pre:[]},
+  {id:'i11', title:'آشنایی با قانون اساسی جمهوری اسلامی ایران', u:2, pre:[]},
+  {id:'i12', title:'اندیشه‌های سیاسی امام خمینی (ره)', u:2, pre:[], note:'با درسِ ۱ واحدیِ اجباریِ «اندیشه‌ها و وصایای امام خمینی» فرق داره — اون یکی جزو تب «دروس عمومی»ه و جدا الزامیه.'},
+
+  {id:'i13', title:'فرهنگ و تمدن اسلام و ایران', u:2, pre:[], note:'برای ورودی‌های ۱۳۸۹ به بعد عملاً الزامیه (همون «تاریخ فرهنگ و تمدن اسلام و ایران/اسلامی» قبلیه).'},
+  {id:'i14', title:'تاریخ تحلیلی صدر اسلام', u:2, pre:[], exclusiveWith:'i15'},
+  {id:'i15', title:'تاریخ امامت', u:2, pre:[], exclusiveWith:'i14'},
+
+  {id:'i16', title:'تفسیر موضوعی قرآن کریم', u:2, pre:[]},
+  {id:'i17', title:'تفسیر موضوعی نهج‌البلاغه', u:2, pre:[]},
+
+  {id:'i18', title:'دانش خانواده و جمعیت', u:2, pre:[]},
+  {id:'i19', title:'انس با قرآن کریم', u:1, pre:[], note:'باید در ۱۶ جلسهٔ ۲ ساعته برگزار بشه؛ می‌تونی مازاد بر سقف واحدهای ترم هم برش داری.'},
+];
+
+const ISLAMIC_GROUPS = [
+  {id:'a', title:'مبانی نظری اسلام', rule:'فقط ۴ واحد از این ۸ واحد', kind:'unitsMin', min:4, ids:['i1','i2','i3','i4']},
+  {id:'b', title:'اخلاق اسلامی', rule:'فقط ۲ واحد از این ۱۰ واحد', kind:'unitsMin', min:2, ids:['i5','i6','i7','i8','i9']},
+  {id:'c', title:'انقلاب اسلامی', rule:'فقط ۲ واحد از این ۶ واحد', kind:'unitsMin', min:2, ids:['i10','i11','i12']},
+  {id:'d', title:'تاریخ و تمدن اسلامی', rule:'فقط ۴ واحد از این ۶ واحد — فقط یکی از ۱۴/۱۵ مجازه', kind:'unitsMin', min:4, ids:['i13','i14','i15'], exclusivePairs:[['i14','i15']]},
+  {id:'e', title:'آشنایی با منابع اسلامی', rule:'فقط ۲ واحد از این ۴ واحد', kind:'unitsMin', min:2, ids:['i16','i17']},
+  {id:'mandatory', title:'دروس اجباری', rule:'هر دو الزامیه — ۳ واحد', kind:'all', ids:['i18','i19']},
+];
+
+// ---------- General education courses (دروس عمومی، غیر از معارف اسلامی) ----------
+// زبان پیش‌دانشگاهی یک واحد جبرانی است: در جمع ۱۴۴ واحد فارغ‌التحصیلی محاسبه نمی‌شود،
+// فقط پیش‌نیاز زبان ترکیبی ۱ است. «انس با قرآن کریم» تکراریه و در تب معارف اسلامی موجوده،
+// اینجا دوباره اضافه نشده.
+const GENERAL_COURSES = [
+  {id:'x_farsi', title:'فارسی عمومی', u:3, pre:[]},
+  {id:'x_lang_pre', title:'زبان پیش‌دانشگاهی', u:2, pre:[], excludeFromTotal:true, note:'واحد جبرانی است؛ در مجموع ۱۴۴ واحد فارغ‌التحصیلی محاسبه نمی‌شود، فقط پیش‌نیاز زبان ترکیبی ۱ است.'},
+  {id:'x_lang1', title:'زبان ترکیبی ۱', u:1, pre:['x_lang_pre']},
+  {id:'x_lang2', title:'زبان ترکیبی ۲', u:1, pre:['x_lang1']},
+  {id:'x_lang3', title:'زبان ترکیبی ۳', u:1, pre:['x_lang2']},
+  {id:'x_pe1', title:'تربیت بدنی', u:1, pre:[]},
+  {id:'x_pe2', title:'ورزش ۱', u:1, pre:['x_pe1']},
+  {id:'x_vasaya', title:'اندیشه‌ها و وصایای امام خمینی (ره)', u:1, pre:[]},
+];
+
+const GENERAL_GROUPS = [
+  {id:'gen_core', title:'دروس عمومی — سایر', rule:'همه اجباری', kind:'all', ids:['x_farsi','x_pe1','x_pe2','x_vasaya']},
+  {id:'gen_lang', title:'زبان عمومی', rule:'همه اجباری (پیش‌دانشگاهی جبرانیه و در جمع واحد حساب نمی‌شه)', kind:'all', ids:['x_lang_pre','x_lang1','x_lang2','x_lang3']},
+];
+
+/* ============================= STATE ============================= */
+
+const STORAGE_KEY = 'course-tracker-state-v2';
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return {elec:[], islamic:[], general:[], grades:{}};
+    const parsed = JSON.parse(raw);
+    return {
+      elec: parsed.elec || [],
+      islamic: parsed.islamic || [],
+      general: parsed.general || [],
+      grades: parsed.grades || {}
+    };
+  }catch(e){ return {elec:[], islamic:[], general:[], grades:{}}; }
+}
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    elec: Array.from(state.elec),
+    islamic: Array.from(state.islamic),
+    general: Array.from(state.general),
+    grades: state.grades
+  }));
+}
+const _s = loadState();
+const state = {
+  elec: new Set(_s.elec),
+  islamic: new Set(_s.islamic),
+  general: new Set(_s.general),
+  grades: _s.grades || {}
+};
+const COURSES_BY_KEY = { elec: ELEC_COURSES, islamic: ISLAMIC_COURSES, general: GENERAL_COURSES };
+
+/* ============================= LOGIC ============================= */
+
+function byId(list, id){ return list.find(c=>c.id===id); }
+
+function unitsOf(course){
+  if(course.variableUnits) return 0;
+  if(typeof course.u === 'number') return course.u; // islamic / general courses
+  return (course.t||0) + (course.p||0); // elec courses
+}
+// Units that count toward the 144-unit graduation total (excludes remedial/جبرانی courses)
+function creditUnitsOf(course){
+  return course.excludeFromTotal ? 0 : unitsOf(course);
+}
+
+function isPassed(passedSet, id){ return passedSet.has(id); }
+
+function combinedPassedUnits(){
+  let sum = 0;
+  Object.keys(COURSES_BY_KEY).forEach(key=>{
+    COURSES_BY_KEY[key].forEach(c=>{ if(state[key].has(c.id)) sum += creditUnitsOf(c); });
+  });
+  return sum;
+}
+
+function groupsRequiredTotal(groups, courses){
+  return groups.reduce((s,g)=>{
+    if(g.kind==='all') return s + g.ids.reduce((s2,id)=>s2+creditUnitsOf(byId(courses,id)),0);
+    if(g.kind==='countMin') return s + (typeof g.unitGoal==='number' ? g.unitGoal : g.min);
+    return s + g.min; // unitsMin: min already expressed in units
+  },0);
+}
+
+function computeGPA(){
+  let weighted = 0, gradedUnits = 0, gradedCount = 0;
+  Object.keys(COURSES_BY_KEY).forEach(key=>{
+    COURSES_BY_KEY[key].forEach(c=>{
+      if(!state[key].has(c.id)) return;
+      const g = state.grades[c.id];
+      if(typeof g !== 'number' || isNaN(g)) return;
+      const u = creditUnitsOf(c);
+      weighted += g*u;
+      gradedUnits += u;
+      gradedCount++;
+    });
+  });
+  return { gpa: gradedUnits ? (weighted/gradedUnits) : null, gradedUnits, gradedCount };
+}
+
+function prereqStatus(course, passedSet){
+  // returns {ok: bool, missing: [titles]}
+  const missing = [];
+  (course.pre||[]).forEach(pid=>{
+    if(!passedSet.has(pid)){
+      const src = ELEC_COURSES.includes(course) ? ELEC_COURSES : ISLAMIC_COURSES;
+      const p = byId(src, pid);
+      missing.push(p ? p.title : pid);
+    }
+  });
+  if(course.minTotalUnits){
+    if(combinedPassedUnits() < course.minTotalUnits){
+      missing.push('گذراندن حداقل ' + course.minTotalUnits + ' واحد کل');
+    }
+  }
+  return {ok: missing.length===0, missing};
+}
+
+function courseStatus(course, passedSet){
+  if(passedSet.has(course.id)) return 'passed';
+  const {ok} = prereqStatus(course, passedSet);
+  return ok ? 'avail' : 'locked';
+}
+
+// how many *other* not-yet-passed courses list this course as a prerequisite
+function unlockCount(course, allCourses, passedSet){
+  let n = 0;
+  allCourses.forEach(c=>{
+    if(c.id===course.id) return;
+    if(passedSet.has(c.id)) return;
+    if((c.pre||[]).includes(course.id)) n++;
+  });
+  return n;
+}
+
+function groupProgress(group, courses, passedSet){
+  const list = group.ids.map(id=>byId(courses,id));
+  if(group.kind==='all'){
+    const total = list.reduce((s,c)=>s+creditUnitsOf(c),0);
+    const done = list.filter(c=>passedSet.has(c.id)).reduce((s,c)=>s+creditUnitsOf(c),0);
+    return {done, total, complete: done>=total, unitsMode:true};
+  }
+  if(group.kind==='countMin'){
+    const doneCount = list.filter(c=>passedSet.has(c.id)).length;
+    return {done:doneCount, total:group.min, complete: doneCount>=group.min, unitsMode:false};
+  }
+  // unitsMin
+  let excludedIds = new Set();
+  if(group.exclusivePairs){
+    group.exclusivePairs.forEach(pair=>{
+      const [a,b] = pair;
+      if(passedSet.has(a) && passedSet.has(b)){
+        excludedIds.add(b); // only count the first as fulfilling quota
+      }
+    });
+  }
+  const done = list.filter(c=>passedSet.has(c.id) && !excludedIds.has(c.id)).reduce((s,c)=>s+creditUnitsOf(c),0);
+  return {done, total:group.min, complete: done>=group.min, unitsMode:true};
+}
+
+function exclusivityWarning(group, passedSet){
+  if(!group.exclusivePairs) return null;
+  for(const [a,b] of group.exclusivePairs){
+    if(passedSet.has(a) && passedSet.has(b)){
+      const ca = byId(ISLAMIC_COURSES, a) || byId(ELEC_COURSES,a);
+      const cb = byId(ISLAMIC_COURSES, b) || byId(ELEC_COURSES,b);
+      return `طبق مقررات فقط یکی از «${ca.title}» یا «${cb.title}» مجاز به احتساب توی سهمیه‌ست. واحد اضافه به‌عنوان مازاد حساب می‌شه، نه بخشی از این ۱۷/رشته.`;
+    }
+  }
+  return null;
+}
+
+/* ============================= RENDER ============================= */
+
+function unitsLabel(course){
+  if(course.variableUnits) return 'واحد: متغیر';
+  let base;
+  if(typeof course.u === 'number'){
+    base = course.u + ' واحد';
+  }else{
+    const parts = [];
+    if(course.t) parts.push(course.t + ' نظری');
+    if(course.p) parts.push(course.p + ' عملی');
+    base = parts.length ? parts.join(' + ') : '—';
+  }
+  if(course.excludeFromTotal) base += ' · جبرانی';
+  return base;
+}
+
+function titleOf(list, id){ const c = byId(list,id); return c?c.title:id; }
+
+function renderCourseRow(course, courses, passedSet, setKey){
+  const status = courseStatus(course, passedSet);
+  const passed = status==='passed';
+  const div = document.createElement('div');
+  div.className = 'course' + (passed ? ' is-passed' : '');
+
+  const stamp = document.createElement('div');
+  stamp.className = 'stamp';
+  stamp.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+  stamp.addEventListener('click', ()=>{
+    const set = state[setKey];
+    if(set.has(course.id)) set.delete(course.id); else set.add(course.id);
+    saveState();
+    renderAll();
+  });
+
+  const body = document.createElement('div');
+  body.className = 'c-body';
+
+  const top = document.createElement('div');
+  top.className = 'c-top';
+
+  const title = document.createElement('span');
+  title.className = 'c-title';
+  title.textContent = course.title;
+  title.addEventListener('click', ()=>stamp.click());
+
+  const units = document.createElement('span');
+  units.className = 'c-units num';
+  units.textContent = unitsLabel(course);
+
+  const badge = document.createElement('span');
+  badge.className = 'c-status ' + status;
+  badge.textContent = status==='passed' ? 'گذرانده' : status==='avail' ? 'قابل اخذ' : 'نیازمند پیش‌نیاز';
+
+  top.appendChild(title);
+  top.appendChild(units);
+  top.appendChild(badge);
+  body.appendChild(top);
+
+  if(!passed){
+    const {missing} = prereqStatus(course, passedSet);
+    if(missing.length){
+      const meta = document.createElement('div');
+      meta.className = 'c-meta';
+      meta.innerHTML = '<b>پیش‌نیاز باقی‌مانده:</b> ' + missing.join('، ');
+      body.appendChild(meta);
+    }
+  }
+  if(course.co && course.co.length){
+    const meta = document.createElement('div');
+    meta.className = 'c-meta';
+    meta.innerHTML = '<b>هم‌نیاز:</b> ' + course.co.map(id=>titleOf(courses,id)).join('، ');
+    body.appendChild(meta);
+  }
+  if(course.preText){
+    const meta = document.createElement('div');
+    meta.className = 'c-meta';
+    meta.innerHTML = '<b>پیش‌نیاز:</b> ' + course.preText;
+    body.appendChild(meta);
+  }
+  if(course.note){
+    const note = document.createElement('div');
+    note.className = 'c-note';
+    note.textContent = course.note;
+    body.appendChild(note);
+  }
+
+  if(passed){
+    const gradeWrap = document.createElement('div');
+    gradeWrap.className = 'grade-wrap';
+    const label = document.createElement('label');
+    label.textContent = 'نمره (اختیاری):';
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '0'; input.max = '20'; input.step = '0.25';
+    input.className = 'grade-input';
+    input.placeholder = '—';
+    const existing = state.grades[course.id];
+    if(typeof existing === 'number') input.value = existing;
+    input.addEventListener('change', ()=>{
+      const v = parseFloat(input.value);
+      if(isNaN(v)){ delete state.grades[course.id]; }
+      else{ state.grades[course.id] = Math.max(0, Math.min(20, v)); }
+      saveState();
+      renderAll();
+    });
+    gradeWrap.appendChild(label);
+    gradeWrap.appendChild(input);
+    body.appendChild(gradeWrap);
+  }
+
+  div.appendChild(stamp);
+  div.appendChild(body);
+  return div;
+}
+
+function renderGroups(containerId, groups, courses, passedSet, setKey){
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  groups.forEach(group=>{
+    const prog = groupProgress(group, courses, passedSet);
+    const details = document.createElement('details');
+    details.className = 'group';
+    details.open = !prog.complete;
+
+    const summary = document.createElement('summary');
+    const gLeft = document.createElement('div');
+    gLeft.className = 'g-left';
+    const gTitle = document.createElement('div');
+    gTitle.className = 'g-title';
+    gTitle.textContent = group.title + (prog.complete ? ' ✓' : '');
+    const gRule = document.createElement('div');
+    gRule.className = 'g-rule';
+    gRule.textContent = group.rule;
+    gLeft.appendChild(gTitle);
+    gLeft.appendChild(gRule);
+
+    const gProgress = document.createElement('div');
+    gProgress.className = 'g-progress';
+    const barTrack = document.createElement('div');
+    barTrack.className = 'bar-track';
+    const barFill = document.createElement('div');
+    barFill.className = 'bar-fill';
+    const pct = Math.min(100, Math.round((prog.done/Math.max(prog.total,1))*100));
+    barFill.style.width = pct + '%';
+    barTrack.appendChild(barFill);
+    const gNum = document.createElement('div');
+    gNum.className = 'g-num num';
+    gNum.textContent = prog.done + ' / ' + prog.total + (prog.unitsMode ? ' واحد' : ' درس');
+    gProgress.appendChild(barTrack);
+    gProgress.appendChild(gNum);
+
+    const chev = document.createElement('span');
+    chev.className = 'g-chev';
+    chev.innerHTML = '▾';
+
+    summary.appendChild(gLeft);
+    summary.appendChild(gProgress);
+    summary.appendChild(chev);
+    details.appendChild(summary);
+
+    const warnMsg = exclusivityWarning(group, passedSet);
+    if(warnMsg){
+      const w = document.createElement('div');
+      w.className = 'g-warn';
+      w.textContent = '⚠ ' + warnMsg;
+      details.appendChild(w);
+    }
+
+    const body = document.createElement('div');
+    body.className = 'g-body';
+    group.ids.forEach(id=>{
+      const course = byId(courses, id);
+      body.appendChild(renderCourseRow(course, courses, passedSet, setKey));
+    });
+    details.appendChild(body);
+
+    container.appendChild(details);
+  });
+}
+
+function renderSummary(containerId, groups, courses, passedSet, sectionLabel){
+  const container = document.getElementById(containerId);
+  const totalDone = courses.reduce((s,c)=> passedSet.has(c.id) ? s+creditUnitsOf(c) : s, 0);
+  const totalAll = groupsRequiredTotal(groups, courses);
+  container.innerHTML = '';
+  const card = document.createElement('div');
+  card.className = 'summary-card';
+  const row = document.createElement('div');
+  row.className='summary-row';
+  row.innerHTML = `<span class="summary-title">جمع واحدهای این بخش (${sectionLabel})</span><span class="summary-num num">${totalDone} از ${totalAll} واحد</span>`;
+  const track = document.createElement('div');
+  track.className='bar-track';
+  const fill = document.createElement('div');
+  fill.className='bar-fill';
+  fill.style.width = Math.min(100, Math.round(totalDone/Math.max(totalAll,1)*100)) + '%';
+  track.appendChild(fill);
+  card.appendChild(row);
+  card.appendChild(track);
+  container.appendChild(card);
+}
+
+function renderMasterSummary(){
+  const container = document.getElementById('master-summary');
+  if(!container) return;
+  const elecTotal = groupsRequiredTotal(ELEC_GROUPS, ELEC_COURSES);
+  const islamicTotal = groupsRequiredTotal(ISLAMIC_GROUPS, ISLAMIC_COURSES);
+  const generalTotal = groupsRequiredTotal(GENERAL_GROUPS, GENERAL_COURSES);
+  const grandTotal = elecTotal + islamicTotal + generalTotal;
+  const done = combinedPassedUnits();
+  const {gpa, gradedUnits, gradedCount} = computeGPA();
+
+  container.innerHTML = '';
+  const card = document.createElement('div');
+  card.className = 'summary-card master';
+
+  const row = document.createElement('div');
+  row.className = 'summary-row';
+  row.innerHTML = `<span class="summary-title">کارنامهٔ کلی — همهٔ ۳ بخش</span><span class="summary-num num">${done} از ${grandTotal} واحد</span>`;
+  const track = document.createElement('div');
+  track.className = 'bar-track';
+  const fill = document.createElement('div');
+  fill.className = 'bar-fill';
+  fill.style.width = Math.min(100, Math.round(done/Math.max(grandTotal,1)*100)) + '%';
+  track.appendChild(fill);
+
+  const gpaRow = document.createElement('div');
+  gpaRow.className = 'summary-row gpa-row';
+  if(gpa===null){
+    gpaRow.innerHTML = `<span class="summary-title">معدل کل</span><span class="summary-num">هنوز نمره‌ای ثبت نکردی — کنار هر درسِ گذرونده می‌تونی نمره بزنی</span>`;
+  }else{
+    gpaRow.innerHTML = `<span class="summary-title">معدل کل</span><span class="summary-num num">${gpa.toFixed(2)} <span style="color:#8a8175;font-weight:400;">(بر اساس ${gradedCount} درس / ${gradedUnits} واحدِ نمره‌دار)</span></span>`;
+  }
+
+  card.appendChild(row);
+  card.appendChild(track);
+  card.appendChild(gpaRow);
+  container.appendChild(card);
+}
+
+function buildSuggestions(groups, courses, passedSet, capNote){
+  const suggestions = [];
+  groups.forEach(group=>{
+    const prog = groupProgress(group, courses, passedSet);
+    if(prog.complete) return;
+    group.ids.forEach(id=>{
+      const course = byId(courses, id);
+      if(passedSet.has(course.id)) return;
+      const {ok} = prereqStatus(course, passedSet);
+      if(!ok) return;
+      const kind = group.kind==='all' ? 'mandatory' : 'quota';
+      const uc = unlockCount(course, courses, passedSet);
+      let reason;
+      if(kind==='mandatory') reason = 'جزو دروس اجباری «' + group.title + '»ست';
+      else reason = 'برای تکمیل سهمیهٔ «' + group.title + '» (' + prog.done + ' از ' + prog.total + (prog.unitsMode?' واحد':' درس') + ')';
+      if(uc>0) reason += ' — پیش‌نیاز ' + uc + ' درس دیگه است';
+      suggestions.push({course, kind, uc, reason});
+    });
+  });
+  const rank = {mandatory:0, quota:1, optional:2};
+  suggestions.sort((a,b)=>{
+    if(rank[a.kind]!==rank[b.kind]) return rank[a.kind]-rank[b.kind];
+    if(b.uc!==a.uc) return b.uc-a.uc;
+    return unitsOf(b.course)-unitsOf(a.course);
+  });
+  const top = suggestions.slice(0,7);
+  return {top, capNote};
+}
+
+function renderSuggestions(containerId, groups, courses, passedSet, capNote){
+  const container = document.getElementById(containerId);
+  const {top} = buildSuggestions(groups, courses, passedSet);
+  container.innerHTML = '';
+  const box = document.createElement('div');
+  box.className = 'suggest-box';
+  box.innerHTML = `<h2><span class="stamp-dot"></span>پیشنهاد برای ترم بعد</h2>`;
+  const sub = document.createElement('p');
+  sub.className = 'suggest-sub';
+  sub.textContent = capNote || 'بر اساس پیش‌نیازهای گذرونده و سهمیهٔ باقی‌ماندهٔ هر گروه، مرتب‌شده از مهم‌ترین به کم‌اهمیت‌ترین.';
+  box.appendChild(sub);
+
+  const list = document.createElement('div');
+  list.className = 'suggest-list';
+  if(top.length===0){
+    const empty = document.createElement('div');
+    empty.className = 'suggest-empty';
+    empty.textContent = 'فعلاً پیشنهادی نیست — یا همه‌چیز رو گذروندی، یا درسی که پیش‌نیازش آماده باشه باقی نمونده.';
+    list.appendChild(empty);
+  }else{
+    top.forEach(s=>{
+      const item = document.createElement('div');
+      item.className = 'suggest-item';
+      const tag = document.createElement('span');
+      tag.className = 'tag ' + s.kind;
+      tag.textContent = s.kind==='mandatory' ? 'اجباری' : 'سهمیه‌ای';
+      const body = document.createElement('div');
+      body.className = 'body';
+      body.innerHTML = `<div class="t">${s.course.title}</div><div class="r">${s.reason}</div>`;
+      item.appendChild(tag);
+      item.appendChild(body);
+      list.appendChild(item);
+    });
+  }
+  box.appendChild(list);
+  container.appendChild(box);
+}
+
+function renderAll(){
+  renderMasterSummary();
+
+  renderSummary('elec-summary', ELEC_GROUPS, ELEC_COURSES, state.elec, 'برق-الکترونیک');
+  renderSuggestions('elec-suggest', ELEC_GROUPS, ELEC_COURSES, state.elec);
+  renderGroups('elec-groups', ELEC_GROUPS, ELEC_COURSES, state.elec, 'elec');
+
+  renderSummary('islamic-summary', ISLAMIC_GROUPS, ISLAMIC_COURSES, state.islamic, 'معارف اسلامی');
+  renderSuggestions('islamic-suggest', ISLAMIC_GROUPS, ISLAMIC_COURSES, state.islamic,
+    'یادت باشه: سقف انتخاب معارف در هر ترم عادی ۲ واحده (با مجوز مدیر گروه حداکثر ۴ واحد)، پس معمولاً فقط یکی-دو مورد اول این لیست رو همین ترم بردار.');
+  renderGroups('islamic-groups', ISLAMIC_GROUPS, ISLAMIC_COURSES, state.islamic, 'islamic');
+
+  renderSummary('general-summary', GENERAL_GROUPS, GENERAL_COURSES, state.general, 'دروس عمومی');
+  renderSuggestions('general-suggest', GENERAL_GROUPS, GENERAL_COURSES, state.general);
+  renderGroups('general-groups', GENERAL_GROUPS, GENERAL_COURSES, state.general, 'general');
+}
+
+/* ============================= TABS & TOOLBAR ============================= */
+
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  if(confirm('مطمئنی می‌خوای همهٔ تیک‌ها و نمره‌های هر ۳ بخش پاک بشه؟ این کار قابل بازگشت نیست.')){
+    state.elec.clear();
+    state.islamic.clear();
+    state.general.clear();
+    state.grades = {};
+    saveState();
+    renderAll();
+  }
+});
+
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const data = JSON.stringify({
+    elec:Array.from(state.elec),
+    islamic:Array.from(state.islamic),
+    general:Array.from(state.general),
+    grades: state.grades
+  }, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'course-tracker-backup.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('importBtn').addEventListener('click', ()=>{
+  document.getElementById('importFile').click();
+});
+document.getElementById('importFile').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const parsed = JSON.parse(reader.result);
+      state.elec = new Set(parsed.elec || []);
+      state.islamic = new Set(parsed.islamic || []);
+      state.general = new Set(parsed.general || []);
+      state.grades = parsed.grades || {};
+      saveState();
+      renderAll();
+      alert('وضعیت با موفقیت بارگذاری شد.');
+    }catch(err){
+      alert('فایل معتبر نیست.');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+renderAll();
+</script>
+</body>
+</html>
