@@ -1,10 +1,10 @@
-const CACHE_NAME = 'daraskhtvareh-v1';
+const CACHE_NAME = 'daraskhtvareh-v2';
 const CORE_ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
+  './icon_192.png',
+  './icon_512.png'
 ];
 
 self.addEventListener('install', (event) => {
