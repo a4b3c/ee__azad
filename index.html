@@ -544,8 +544,7 @@ function prereqStatus(course, passedSet){
   const missing = [];
   (course.pre||[]).forEach(pid=>{
     if(!passedSet.has(pid)){
-      const src = ELEC_COURSES.includes(course) ? ELEC_COURSES : ISLAMIC_COURSES;
-      const p = byId(src, pid);
+      const p = byId(ELEC_COURSES, pid) || byId(ISLAMIC_COURSES, pid) || byId(GENERAL_COURSES, pid);
       missing.push(p ? p.title : pid);
     }
   });
