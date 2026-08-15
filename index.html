@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>درخت‌واره دروس — واحد یار</title>
+<title>درخت‌واره دروس - واحد یار</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#132a2e">
 <meta name="mobile-web-app-capable" content="yes">
@@ -123,6 +123,7 @@
   .suggest-item .body .t{ font-weight:700; font-size:14px;}
   .suggest-item .body .s-units{ font-weight:500; font-size:12px; color:#8a8175;}
   .suggest-item .body .r{ font-size:12.5px; color:#726b5c; margin-top:2px;}
+  .suggest-item .body .r.r-warn{ color:var(--seal); font-weight:600;}
   .dismiss-btn{
     flex-shrink:0; width:26px; height:26px; border-radius:50%; border:1px solid var(--line);
     background:#fff; color:var(--seal); font-size:13px; line-height:1; cursor:pointer;
@@ -272,9 +273,6 @@
 
   <!-- GENERAL EDUCATION PANEL -->
   <section id="panel-general" class="panel">
-    <div class="disclaimer">
-       «زبان پیش‌دانشگاهی» یه واحد جبرانیه: پیش‌نیاز «زبان ترکیبی ۱»ه ولی جزو مجموع ۱۴۴ واحد فارغ‌التحصیلی حساب نمی‌شه.
-    </div>
     <div id="general-summary"></div>
     <div id="general-suggest"></div>
     <div id="general-groups"></div>
@@ -362,8 +360,8 @@ const ELEC_COURSES = [
   {id:'e57', title:'اخلاق مهندسی و محیط زیست', t:1, p:0, pre:[], co:[]},
   {id:'e58', title:'فلسفه علم و فناوری', t:2, p:0, pre:[], co:[]},
   {id:'e59', title:'فیلتر و سنتز مدار', t:3, p:0, pre:['e18','e21'], co:[]},
-  {id:'e60', title:'فیبر نوری', t:3, p:0, pre:['e17'], co:[], coText:'میدان‌ها و امواج', note:'هم‌نیاز جدول: «میدانها و امواج» — درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
-  {id:'e61', title:'کنترل ماشین‌های الکتریکی', t:3, p:0, pre:[], co:[], coText:'ماشین‌های الکتریکی ۳', note:'هم‌نیاز جدول: «ماشین‌های الکتریکی ۳» — درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
+  {id:'e60', title:'فیبر نوری', t:3, p:0, pre:['e17'], co:[], coText:'میدان‌ها و امواج', note:'هم‌نیاز جدول: «میدانها و امواج» - درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
+  {id:'e61', title:'کنترل ماشین‌های الکتریکی', t:3, p:0, pre:[], co:[], coText:'ماشین‌های الکتریکی ۳', note:'هم‌نیاز جدول: «ماشین‌های الکتریکی ۳» - درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
   {id:'e62', title:'سیستم‌های فیزیکی-سایبری', t:3, p:0, pre:['e27'], co:[]},
   {id:'e63', title:'برنامه‌سازی پیشرفته', t:3, p:0, pre:['e6'], co:[]},
   {id:'e64', title:'سیستم‌های توزیع انرژی الکتریکی', t:3, p:0, pre:['e25'], co:[]},
@@ -373,12 +371,12 @@ const ELEC_COURSES = [
 ];
 
 const ELEC_GROUPS = [
-  {id:'basic', title:'دروس پایه', rule:'همه اجباری — ۲۰ واحد', kind:'all', ids:['e1','e2','e3','e4','e5','e6','e7','e8']},
-  {id:'core', title:'دروس اصلی', rule:'همه اجباری — ۵۶ واحد', kind:'all', ids:['e9','e10','e11','e12','e13','e14','e15','e16','e17','e18','e19','e20','e21','e22','e23','e24','e25','e26','e27','e28','e29','e30','e31','e32','e33']},
-  {id:'reqspec', title:'دروس تخصصی الزامی', rule:'همه اجباری — ۱۲ واحد', kind:'all', ids:['e34','e35','e36','e37']},
-  {id:'elecTheory', title:'دروس تخصصی انتخابی — نظری', rule:'باید ۳ درس (۹ واحد) از این ۷ مورد انتخاب کنی', kind:'countMin', min:3, unitGoal:9, ids:['e38','e39','e40','e41','e42','e43','e44']},
-  {id:'elecLab', title:'دروس تخصصی انتخابی — آزمایشگاه', rule:'باید ۳ درس (۳ واحد) از این ۶ مورد انتخاب کنی', kind:'countMin', min:3, unitGoal:3, ids:['e45','e46','e47','e48','e49','e50']},
-  {id:'skills', title:'دروس مهارتی - اشتغال‌پذیری', rule:'همه اجباری — ۵ واحد', kind:'all', ids:['e51','e52','e53']},
+  {id:'basic', title:'دروس پایه', rule:'همه اجباری - ۲۰ واحد', kind:'all', ids:['e1','e2','e3','e4','e5','e6','e7','e8']},
+  {id:'core', title:'دروس اصلی', rule:'همه اجباری - ۵۶ واحد', kind:'all', ids:['e9','e10','e11','e12','e13','e14','e15','e16','e17','e18','e19','e20','e21','e22','e23','e24','e25','e26','e27','e28','e29','e30','e31','e32','e33']},
+  {id:'reqspec', title:'دروس تخصصی الزامی', rule:'همه اجباری - ۱۲ واحد', kind:'all', ids:['e34','e35','e36','e37']},
+  {id:'elecTheory', title:'دروس تخصصی انتخابی - نظری', rule:'باید ۳ درس (۹ واحد) از این ۷ مورد انتخاب کنی', kind:'countMin', min:3, unitGoal:9, ids:['e38','e39','e40','e41','e42','e43','e44']},
+  {id:'elecLab', title:'دروس تخصصی انتخابی - آزمایشگاه', rule:'باید ۳ درس (۳ واحد) از این ۶ مورد انتخاب کنی', kind:'countMin', min:3, unitGoal:3, ids:['e45','e46','e47','e48','e49','e50']},
+  {id:'skills', title:'دروس مهارتی - اشتغال‌پذیری', rule:'همه اجباری - ۵ واحد', kind:'all', ids:['e51','e52','e53']},
   {id:'electives', title:'دروس اختیاری', rule:'حداقل ۱۳ واحد از این فهرست (دفاع مقدس الزامی‌ست جزوشون باشه)', kind:'unitsMin', min:13, ids:['e54','e55','e56','e57','e58','e59','e60','e61','e62','e63','e64','e65','e_defa','e_karafarini']},
 ];
 
@@ -397,7 +395,7 @@ const ISLAMIC_COURSES = [
 
   {id:'i10', title:'انقلاب اسلامی ایران', u:2, pre:[]},
   {id:'i11', title:'آشنایی با قانون اساسی جمهوری اسلامی ایران', u:2, pre:[]},
-  {id:'i12', title:'اندیشه‌های سیاسی امام خمینی (ره)', u:2, pre:[], note:'با درسِ ۱ واحدیِ اجباریِ «اندیشه‌ها و وصایای امام خمینی» فرق داره — اون یکی جزو تب «دروس عمومی»ه و جدا الزامیه.'},
+  {id:'i12', title:'اندیشه‌های سیاسی امام خمینی (ره)', u:2, pre:[], note:'با درسِ ۱ واحدیِ اجباریِ «اندیشه‌ها و وصایای امام خمینی» فرق داره - اون یکی جزو تب «دروس عمومی»ه و جدا الزامیه.'},
 
   {id:'i13', title:'فرهنگ و تمدن اسلام و ایران', u:2, pre:[], note:'برای ورودی‌های ۱۳۸۹ به بعد عملاً الزامیه (همون «تاریخ فرهنگ و تمدن اسلام و ایران/اسلامی» قبلیه).'},
   {id:'i14', title:'تاریخ تحلیلی صدر اسلام', u:2, pre:[], exclusiveWith:'i15'},
@@ -414,9 +412,9 @@ const ISLAMIC_GROUPS = [
   {id:'a', title:'مبانی نظری اسلام', rule:'فقط ۴ واحد از این ۸ واحد', kind:'unitsMin', min:4, ids:['i1','i2','i3','i4']},
   {id:'b', title:'اخلاق اسلامی', rule:'فقط ۲ واحد از این ۱۰ واحد', kind:'unitsMin', min:2, ids:['i5','i6','i7','i8','i9']},
   {id:'c', title:'انقلاب اسلامی', rule:'فقط ۲ واحد از این ۶ واحد', kind:'unitsMin', min:2, ids:['i10','i11','i12']},
-  {id:'d', title:'تاریخ و تمدن اسلامی', rule:'فقط ۴ واحد از این ۶ واحد — فقط یکی از ۱۴/۱۵ مجازه', kind:'unitsMin', min:4, ids:['i13','i14','i15'], exclusivePairs:[['i14','i15']]},
+  {id:'d', title:'تاریخ و تمدن اسلامی', rule:'فقط ۴ واحد از این ۶ واحد - فقط یکی از ۱۴/۱۵ مجازه', kind:'unitsMin', min:4, ids:['i13','i14','i15'], exclusivePairs:[['i14','i15']]},
   {id:'e', title:'آشنایی با منابع اسلامی', rule:'فقط ۲ واحد از این ۴ واحد', kind:'unitsMin', min:2, ids:['i16','i17']},
-  {id:'mandatory', title:'دروس اجباری', rule:'هر دو الزامیه — ۳ واحد', kind:'all', ids:['i18','i19']},
+  {id:'mandatory', title:'دروس اجباری', rule:'هر دو الزامیه - ۳ واحد', kind:'all', ids:['i18','i19']},
 ];
 
 // ---------- General education courses (دروس عمومی، غیر از معارف اسلامی) ----------
@@ -435,7 +433,7 @@ const GENERAL_COURSES = [
 ];
 
 const GENERAL_GROUPS = [
-  {id:'gen_core', title:'دروس عمومی — سایر', rule:'همه اجباری', kind:'all', ids:['x_farsi','x_pe1','x_pe2','x_vasaya']},
+  {id:'gen_core', title:'دروس عمومی - سایر', rule:'همه اجباری', kind:'all', ids:['x_farsi','x_pe1','x_pe2','x_vasaya']},
   {id:'gen_lang', title:'زبان عمومی', rule:'همه اجباری (پیش‌دانشگاهی جبرانیه و در جمع واحد حساب نمی‌شه)', kind:'all', ids:['x_lang_pre','x_lang1','x_lang2','x_lang3']},
 ];
 
@@ -520,6 +518,16 @@ function computeGPA(){
   return { gpa: gradedUnits ? (weighted/gradedUnits) : null, gradedUnits, gradedCount };
 }
 
+// A corequisite course is "reachable" (can be taken together with, or has already
+// been taken before, the course that requires it) if it's already passed, or if
+// its own prerequisites are all satisfied (so it could be taken this same term).
+function coreqReachable(coId, passedSet){
+  if(passedSet.has(coId)) return true;
+  const co = byId(ELEC_COURSES, coId) || byId(ISLAMIC_COURSES, coId) || byId(GENERAL_COURSES, coId);
+  if(!co) return true; // co outside this list (e.g. coText note) - can't verify, don't block
+  return (co.pre||[]).every(pid=>passedSet.has(pid));
+}
+
 function prereqStatus(course, passedSet){
   // returns {ok: bool, missing: [titles]}
   const missing = [];
@@ -527,6 +535,12 @@ function prereqStatus(course, passedSet){
     if(!passedSet.has(pid)){
       const p = byId(ELEC_COURSES, pid) || byId(ISLAMIC_COURSES, pid) || byId(GENERAL_COURSES, pid);
       missing.push(p ? p.title : pid);
+    }
+  });
+  (course.co||[]).forEach(cid=>{
+    if(!coreqReachable(cid, passedSet)){
+      const c = byId(ELEC_COURSES, cid) || byId(ISLAMIC_COURSES, cid) || byId(GENERAL_COURSES, cid);
+      missing.push((c ? c.title : cid) + ' (هم‌نیاز)');
     }
   });
   if(course.minTotalUnits){
@@ -597,12 +611,12 @@ function unitsLabel(course){
   if(course.variableUnits) return 'واحد: متغیر';
   let base;
   if(typeof course.u === 'number'){
-    base = course.u + ' واحد';
+    base = '<span class="num">' + course.u + '</span> واحد';
   }else{
     const parts = [];
-    if(course.t) parts.push(course.t + ' نظری');
-    if(course.p) parts.push(course.p + ' عملی');
-    base = parts.length ? parts.join(' + ') : '—';
+    if(course.t) parts.push('<span class="num">' + course.t + '</span> نظری');
+    if(course.p) parts.push('<span class="num">' + course.p + '</span> عملی');
+    base = parts.length ? parts.join(' + ') : '-';
   }
   if(course.excludeFromTotal) base += ' · جبرانی';
   return base;
@@ -638,8 +652,8 @@ function renderCourseRow(course, courses, passedSet, setKey){
   title.addEventListener('click', ()=>stamp.click());
 
   const units = document.createElement('span');
-  units.className = 'c-units num';
-  units.textContent = unitsLabel(course);
+  units.className = 'c-units';
+  units.innerHTML = unitsLabel(course);
 
   const badge = document.createElement('span');
   badge.className = 'c-status ' + status;
@@ -693,7 +707,7 @@ function renderCourseRow(course, courses, passedSet, setKey){
     input.type = 'number';
     input.min = '0'; input.max = '20'; input.step = '0.25';
     input.className = 'grade-input';
-    input.placeholder = '—';
+    input.placeholder = '-';
     const existing = state.grades[course.id];
     if(typeof existing === 'number') input.value = existing;
     input.addEventListener('change', ()=>{
@@ -744,8 +758,8 @@ function renderGroups(containerId, groups, courses, passedSet, setKey){
     barFill.style.width = pct + '%';
     barTrack.appendChild(barFill);
     const gNum = document.createElement('div');
-    gNum.className = 'g-num num';
-    gNum.textContent = prog.done + ' / ' + prog.total + (prog.unitsMode ? ' واحد' : ' درس');
+    gNum.className = 'g-num';
+    gNum.innerHTML = '<span class="num">' + prog.done + ' / ' + prog.total + '</span>' + (prog.unitsMode ? ' واحد' : ' درس');
     gProgress.appendChild(barTrack);
     gProgress.appendChild(gNum);
 
@@ -787,7 +801,7 @@ function renderSummary(containerId, groups, courses, passedSet, sectionLabel){
   card.className = 'summary-card';
   const row = document.createElement('div');
   row.className='summary-row';
-  row.innerHTML = `<span class="summary-title">جمع واحدهای این بخش (${sectionLabel})</span><span class="summary-num num">${totalDone} از ${totalAll} واحد</span>`;
+  row.innerHTML = `<span class="summary-title">جمع واحدهای این بخش (${sectionLabel})</span><span class="summary-num"><span class="num">${totalDone}</span> از <span class="num">${totalAll}</span> واحد</span>`;
   const track = document.createElement('div');
   track.className='bar-track';
   const fill = document.createElement('div');
@@ -815,7 +829,7 @@ function renderMasterSummary(){
 
   const row = document.createElement('div');
   row.className = 'summary-row';
-  row.innerHTML = `<span class="summary-title">کارنامهٔ کلی — همهٔ ۳ بخش</span><span class="summary-num num">${done} از ${grandTotal} واحد</span>`;
+  row.innerHTML = `<span class="summary-title">کارنامهٔ کلی - همهٔ ۳ بخش</span><span class="summary-num"><span class="num">${done}</span> از <span class="num">${grandTotal}</span> واحد</span>`;
   const track = document.createElement('div');
   track.className = 'bar-track';
   const fill = document.createElement('div');
@@ -826,9 +840,9 @@ function renderMasterSummary(){
   const gpaRow = document.createElement('div');
   gpaRow.className = 'summary-row gpa-row';
   if(gpa===null){
-    gpaRow.innerHTML = `<span class="summary-title">معدل کل</span><span class="summary-num">هنوز نمره‌ای ثبت نکردی — کنار هر درسِ گذرونده می‌تونی نمره بزنی</span>`;
+    gpaRow.innerHTML = `<span class="summary-title">معدل کل</span><span class="summary-num">هنوز نمره‌ای ثبت نکردی - کنار هر درسِ گذرونده می‌تونی نمره بزنی</span>`;
   }else{
-    gpaRow.innerHTML = `<span class="summary-title">معدل کل</span><span class="summary-num num">${gpa.toFixed(2)} <span style="color:#8a8175;font-weight:400;">(بر اساس ${gradedCount} درس / ${gradedUnits} واحدِ نمره‌دار)</span></span>`;
+    gpaRow.innerHTML = `<span class="summary-title">معدل کل</span><span class="summary-num"><span class="num">${gpa.toFixed(2)}</span> <span style="color:#8a8175;font-weight:400;">(بر اساس <span class="num">${gradedCount}</span> درس / <span class="num">${gradedUnits}</span> واحدِ نمره‌دار)</span></span>`;
   }
 
   card.appendChild(row);
@@ -853,11 +867,18 @@ function buildSuggestions(groups, courses, passedSet, dismissedSet){
       if(!ok) return;
       const kind = group.kind==='all' ? 'mandatory' : 'quota';
       const uc = unlockCount(course, courses, passedSet);
-      let reason;
-      if(kind==='mandatory') reason = 'جزو دروس اجباری «' + group.title + '»ست';
-      else reason = 'برای تکمیل سهمیهٔ «' + group.title + '» (' + prog.done + ' از ' + prog.total + (prog.unitsMode?' واحد':' درس') + ')';
-      if(uc>0) reason += ' — پیش‌نیاز ' + uc + ' درس دیگه است';
-      suggestions.push({course, kind, uc, reason});
+      const reasons = [];
+      if(kind==='mandatory') reasons.push({text:'جزو دروس اجباری «' + group.title + '»ست.'});
+      else reasons.push({text:'برای تکمیل سهمیهٔ «' + group.title + '» (' + prog.done + ' از ' + prog.total + (prog.unitsMode?' واحد':' درس') + ').'});
+      if(uc>0) reasons.push({text:'پیش‌نیاز ' + uc + ' درس دیگه است.'});
+      // unpassed coreqs this course needs (it's "available" only because those
+      // coreqs are themselves reachable - meaning it must be taken *together with* them)
+      const pendingCo = (course.co||[]).filter(cid=>!passedSet.has(cid));
+      if(pendingCo.length){
+        const coTitles = pendingCo.map(cid=>titleOf(courses,cid)).join('، ');
+        reasons.push({text:'باید همراه با «' + coTitles + '» برداشته بشه.', warn:true});
+      }
+      suggestions.push({course, kind, uc, reasons, pendingCo});
     });
   });
   const rank = {mandatory:0, quota:1, optional:2};
@@ -866,7 +887,32 @@ function buildSuggestions(groups, courses, passedSet, dismissedSet){
     if(b.uc!==a.uc) return b.uc-a.uc;
     return unitsOf(b.course)-unitsOf(a.course);
   });
-  return suggestions.slice(0,6);
+
+  // A course that needs an unpassed coreq can only appear in the suggestion list
+  // paired with that coreq - otherwise two courses that both merely *tolerate*
+  // being taken alongside the same not-yet-taken course (e.g. two courses that
+  // each list "الکترونیک ۱" as a coreq) would wrongly get suggested side by side,
+  // as if either could be taken on its own right now.
+  const suggestedIds = new Set(suggestions.map(s=>s.course.id));
+  const pairedCount = {}; // coreq target id -> how many dependents already claimed it
+  const filtered = suggestions.filter(s=>{
+    if(s.pendingCo.length===0) return true;
+    const allReachable = s.pendingCo.every(cid=>suggestedIds.has(cid));
+    if(!allReachable) return false;
+    // claim a slot with each pending coreq target; if any is already taken by a
+    // higher-ranked dependent, this one waits (suggestions are already sorted).
+    // This prevents multiple courses that each merely *tolerate* being taken
+    // alongside the same not-yet-taken coreq course (e.g. several courses that
+    // all list "الکترونیک ۱" as a coreq) from being suggested side by side, as
+    // if each could be taken on its own right now - only one can pair with it.
+    for(const cid of s.pendingCo){
+      if(pairedCount[cid]) return false;
+    }
+    s.pendingCo.forEach(cid=>{ pairedCount[cid] = (pairedCount[cid]||0) + 1; });
+    return true;
+  });
+
+  return filtered.slice(0,6);
 }
 
 function renderSuggestions(containerId, groups, courses, passedSet, key, capNote){
@@ -886,7 +932,7 @@ function renderSuggestions(containerId, groups, courses, passedSet, key, capNote
   if(top.length===0){
     const empty = document.createElement('div');
     empty.className = 'suggest-empty';
-    empty.textContent = 'فعلاً پیشنهادی نیست — یا همه‌چیز رو گذروندی، یا درسی که پیش‌نیازش آماده باشه باقی نمونده.';
+    empty.textContent = 'فعلاً پیشنهادی نیست - یا همه‌چیز رو گذروندی، یا درسی که پیش‌نیازش آماده باشه باقی نمونده.';
     list.appendChild(empty);
   }else{
     top.forEach(s=>{
@@ -897,10 +943,13 @@ function renderSuggestions(containerId, groups, courses, passedSet, key, capNote
       tag.textContent = s.kind==='mandatory' ? 'اجباری' : 'سهمیه‌ای';
       const body = document.createElement('div');
       body.className = 'body';
-      body.innerHTML = `<div class="t">${s.course.title} <span class="s-units num">— ${unitsLabel(s.course)}</span></div><div class="r">${s.reason}</div>`;
+      const reasonHtml = s.reasons.map(r=>
+        `<div class="r${r.warn ? ' r-warn' : ''}">- ${escapeHtml(r.text)}</div>`
+      ).join('');
+      body.innerHTML = `<div class="t">${s.course.title} <span class="s-units">- ${unitsLabel(s.course)}</span></div>${reasonHtml}`;
       const dismissBtn = document.createElement('button');
       dismissBtn.className = 'dismiss-btn';
-      dismissBtn.title = 'فعلاً نمی‌تونم این رو بردارم — یکی دیگه پیشنهاد بده';
+      dismissBtn.title = 'فعلاً نمی‌تونم این رو بردارم - یکی دیگه پیشنهاد بده';
       dismissBtn.textContent = '✕';
       dismissBtn.addEventListener('click', ()=>{
         dismissed[key].add(s.course.id);
@@ -1003,7 +1052,7 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
 
 function chartSections(){
   return [
-    {label:'دروس پایه، اصلی و تخصصی — برق-الکترونیک', groups: ELEC_GROUPS, courses: ELEC_COURSES, passed: state.elec},
+    {label:'دروس پایه، اصلی و تخصصی - برق-الکترونیک', groups: ELEC_GROUPS, courses: ELEC_COURSES, passed: state.elec},
     {label:'معارف اسلامی', groups: ISLAMIC_GROUPS, courses: ISLAMIC_COURSES, passed: state.islamic},
     {label:'دروس عمومی', groups: GENERAL_GROUPS, courses: GENERAL_COURSES, passed: state.general},
   ];
@@ -1024,8 +1073,8 @@ function courseRowData(c, sec){
   const isP = sec.passed.has(c.id);
   const grade = state.grades[c.id];
   const gradeTxt = (isP && typeof grade==='number') ? String(grade) : '-';
-  const tUnits = c.variableUnits ? '—' : (typeof c.u === 'number' ? c.u : (c.t||0));
-  const pUnits = c.variableUnits ? '—' : (typeof c.u === 'number' ? '-' : (c.p||0));
+  const tUnits = c.variableUnits ? '-' : (typeof c.u === 'number' ? c.u : (c.t||0));
+  const pUnits = c.variableUnits ? '-' : (typeof c.u === 'number' ? '-' : (c.p||0));
   const preTxt = (c.pre && c.pre.length)
     ? c.pre.map(id=>reqTitleHtml(id, sec)).join('، ')
     : escapeHtml(c.preText || '-');
@@ -1048,7 +1097,7 @@ function buildChartBodyHTML(){
     let rowNum = 1;
     sec.groups.forEach(g=>{
       const prog = groupProgress(g, sec.courses, sec.passed);
-      body += `<tr class="group-caption-row"><td colspan="7">${g.title} — ${g.rule} (${prog.done}/${prog.total}${prog.unitsMode?' واحد':' درس'})</td></tr>`;
+      body += `<tr class="group-caption-row"><td colspan="7">${g.title} - ${g.rule} (${prog.done}/${prog.total}${prog.unitsMode?' واحد':' درس'})</td></tr>`;
       g.ids.forEach(id=>{
         const c = byId(sec.courses, id);
         const {isP, gradeTxt, tUnits, pUnits, preTxt, coTxt} = courseRowData(c, sec);
