@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>درخت‌واره دروس — برنامه‌ریز ترم</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#132a2e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="درخت‌واره دروس">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
@@ -112,7 +120,15 @@
   .tag.optional{ background:var(--lock-bg); color:#5c564a;}
   .suggest-item .body{flex:1; min-width:0;}
   .suggest-item .body .t{ font-weight:700; font-size:14px;}
+  .suggest-item .body .s-units{ font-weight:500; font-size:12px; color:#8a8175;}
   .suggest-item .body .r{ font-size:12.5px; color:#726b5c; margin-top:2px;}
+  .dismiss-btn{
+    flex-shrink:0; width:26px; height:26px; border-radius:50%; border:1px solid var(--line);
+    background:#fff; color:var(--seal); font-size:13px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:background .15s, border-color .15s;
+    margin-top:1px;
+  }
+  .dismiss-btn:hover{ background:#faece7; border-color:#e3c3ba;}
   .suggest-empty{ font-size:13.5px; color:#726b5c; padding:6px 2px;}
 
   details.group{
@@ -175,7 +191,7 @@
   }
   .footnote b{color:#5a5346;}
 
-  .toolbar{ display:flex; gap:8px; margin-bottom:14px; }
+  .toolbar{ display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
   .toolbar button{
     font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; padding:8px 14px;
     border:1px solid var(--line); background:var(--paper-2); color:var(--ink); cursor:pointer;
@@ -187,6 +203,24 @@
     background:var(--warn-bg); color:#7a4113; border:1px solid #e6cda3; border-radius:var(--radius);
     padding:12px 14px; font-size:12.5px; margin-bottom:16px; line-height:1.8;
   }
+
+  /* Off-screen content used only to render the exported PDF via html2canvas */
+  .chart-export{
+    font-family:'Vazirmatn', Tahoma, sans-serif; direction:rtl; background:#ffffff; color:#111111;
+    padding:32px; width:794px;
+  }
+  .chart-export h1{ font-size:22px; margin:0 0 4px;}
+  .chart-export .meta{ color:#555; font-size:12.5px; margin-bottom:4px;}
+  .chart-export .legend{ font-size:12px; color:#555; margin-bottom:20px;}
+  .chart-export .legend b{ color:#1e7d34;}
+  .chart-export h2{ font-size:17px; margin:26px 0 8px; border-bottom:2px solid #222; padding-bottom:6px;}
+  .chart-export h3{ font-size:13.5px; margin:14px 0 6px; color:#333;}
+  .chart-export h3 .rule{ font-weight:400; color:#777; font-size:11.5px;}
+  .chart-export ul{ list-style:none; padding:0; margin:0 0 4px;}
+  .chart-export li{ padding:4px 2px; border-bottom:1px dotted #ddd; font-size:12.5px; color:#111;}
+  .chart-export li.passed{ color:#1e7d34; font-weight:700;}
+  .chart-export li .u{ color:#888; font-weight:400; font-size:11px;}
+  .chart-export li.passed .u{ color:#4caf6f; font-weight:500;}
 
   .grade-wrap{ display:flex; align-items:center; gap:6px; margin-top:6px;}
   .grade-wrap label{ font-size:11.5px; color:#8a8175;}
@@ -229,7 +263,9 @@
   <div class="toolbar">
     <button id="exportBtn">خروجی گرفتن از وضعیت</button>
     <button id="importBtn">وارد کردن وضعیت</button>
+    <button id="chartBtn">دانلود چارت کامل (PDF)</button>
     <button id="resetBtn" class="danger">پاک کردن همه تیک‌ها</button>
+    <button id="installBtn" style="display:none;">نصب روی دستگاه</button>
   </div>
 
   <!-- ELECTRONICS PANEL -->
@@ -269,6 +305,8 @@
 
 <input type="file" id="importFile" accept="application/json" style="display:none">
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 /* ============================= DATA ============================= */
 
@@ -349,9 +387,6 @@ const ELEC_COURSES = [
   {id:'e63', title:'برنامه‌سازی پیشرفته', t:3, p:0, pre:['e6'], co:[]},
   {id:'e64', title:'سیستم‌های توزیع انرژی الکتریکی', t:3, p:0, pre:['e25'], co:[]},
   {id:'e65', title:'مبانی خودروهای برقی و ترکیبی', t:3, p:0, pre:['e23'], co:[]},
-  {id:'e66', title:'دروس و آزمایشگاه‌های سایر شاخه‌های تخصصی (مورد ۱)', t:null, p:null, pre:[], co:[], variableUnits:true},
-  {id:'e67', title:'دروس و آزمایشگاه‌های سایر شاخه‌های تخصصی (مورد ۲)', t:null, p:null, pre:[], co:[], variableUnits:true},
-  {id:'e68', title:'حداکثر دو درس از علوم و مهندسی کامپیوتر', t:null, p:null, pre:[], co:[], variableUnits:true},
   {id:'e_defa', title:'دفاع مقدس', t:2, p:0, pre:[], co:[], note:'طبق جدول باید حتماً به‌عنوان یکی از دروس اختیاری اخذ شود.'},
   {id:'e_karafarini', title:'کارآفرینی', t:3, p:0, pre:[], co:[], note:'جزو دروس تخصصی اختیاری محسوب می‌شود.'},
 ];
@@ -363,7 +398,7 @@ const ELEC_GROUPS = [
   {id:'elecTheory', title:'دروس تخصصی انتخابی — نظری', rule:'باید ۳ درس (۹ واحد) از این ۷ مورد انتخاب کنی', kind:'countMin', min:3, unitGoal:9, ids:['e38','e39','e40','e41','e42','e43','e44']},
   {id:'elecLab', title:'دروس تخصصی انتخابی — آزمایشگاه', rule:'باید ۳ درس (۳ واحد) از این ۶ مورد انتخاب کنی', kind:'countMin', min:3, unitGoal:3, ids:['e45','e46','e47','e48','e49','e50']},
   {id:'skills', title:'دروس مهارتی - اشتغال‌پذیری', rule:'همه اجباری — ۵ واحد', kind:'all', ids:['e51','e52','e53']},
-  {id:'electives', title:'دروس اختیاری', rule:'حداقل ۱۳ واحد از این فهرست (دفاع مقدس الزامی‌ست جزوشون باشه)', kind:'unitsMin', min:13, ids:['e54','e55','e56','e57','e58','e59','e60','e61','e62','e63','e64','e65','e66','e67','e68','e_defa','e_karafarini']},
+  {id:'electives', title:'دروس اختیاری', rule:'حداقل ۱۳ واحد از این فهرست (دفاع مقدس الزامی‌ست جزوشون باشه)', kind:'unitsMin', min:13, ids:['e54','e55','e56','e57','e58','e59','e60','e61','e62','e63','e64','e65','e_defa','e_karafarini']},
 ];
 
 // ---------- Islamic Studies electives ----------
@@ -816,7 +851,10 @@ function renderMasterSummary(){
   container.appendChild(card);
 }
 
-function buildSuggestions(groups, courses, passedSet, capNote){
+// Session-only dismissals (never persisted): reset to empty on every page load/refresh.
+const dismissed = { elec: new Set(), islamic: new Set(), general: new Set() };
+
+function buildSuggestions(groups, courses, passedSet, dismissedSet){
   const suggestions = [];
   groups.forEach(group=>{
     const prog = groupProgress(group, courses, passedSet);
@@ -824,6 +862,7 @@ function buildSuggestions(groups, courses, passedSet, capNote){
     group.ids.forEach(id=>{
       const course = byId(courses, id);
       if(passedSet.has(course.id)) return;
+      if(dismissedSet && dismissedSet.has(course.id)) return;
       const {ok} = prereqStatus(course, passedSet);
       if(!ok) return;
       const kind = group.kind==='all' ? 'mandatory' : 'quota';
@@ -841,20 +880,19 @@ function buildSuggestions(groups, courses, passedSet, capNote){
     if(b.uc!==a.uc) return b.uc-a.uc;
     return unitsOf(b.course)-unitsOf(a.course);
   });
-  const top = suggestions.slice(0,7);
-  return {top, capNote};
+  return suggestions.slice(0,6);
 }
 
-function renderSuggestions(containerId, groups, courses, passedSet, capNote){
+function renderSuggestions(containerId, groups, courses, passedSet, key, capNote){
   const container = document.getElementById(containerId);
-  const {top} = buildSuggestions(groups, courses, passedSet);
+  const top = buildSuggestions(groups, courses, passedSet, dismissed[key]);
   container.innerHTML = '';
   const box = document.createElement('div');
   box.className = 'suggest-box';
   box.innerHTML = `<h2><span class="stamp-dot"></span>پیشنهاد برای ترم بعد</h2>`;
   const sub = document.createElement('p');
   sub.className = 'suggest-sub';
-  sub.textContent = capNote || 'بر اساس پیش‌نیازهای گذرونده و سهمیهٔ باقی‌ماندهٔ هر گروه، مرتب‌شده از مهم‌ترین به کم‌اهمیت‌ترین.';
+  sub.textContent = capNote || 'بر اساس پیش‌نیازهای گذرونده و سهمیهٔ باقی‌ماندهٔ هر گروه، مرتب‌شده از مهم‌ترین به کم‌اهمیت‌ترین. اگه درسی رو نمی‌تونی برداری، با ✕ ردش کن تا جایگزین بیاد.';
   box.appendChild(sub);
 
   const list = document.createElement('div');
@@ -873,9 +911,18 @@ function renderSuggestions(containerId, groups, courses, passedSet, capNote){
       tag.textContent = s.kind==='mandatory' ? 'اجباری' : 'سهمیه‌ای';
       const body = document.createElement('div');
       body.className = 'body';
-      body.innerHTML = `<div class="t">${s.course.title}</div><div class="r">${s.reason}</div>`;
+      body.innerHTML = `<div class="t">${s.course.title} <span class="s-units num">— ${unitsLabel(s.course)}</span></div><div class="r">${s.reason}</div>`;
+      const dismissBtn = document.createElement('button');
+      dismissBtn.className = 'dismiss-btn';
+      dismissBtn.title = 'فعلاً نمی‌تونم این رو بردارم — یکی دیگه پیشنهاد بده';
+      dismissBtn.textContent = '✕';
+      dismissBtn.addEventListener('click', ()=>{
+        dismissed[key].add(s.course.id);
+        renderAll();
+      });
       item.appendChild(tag);
       item.appendChild(body);
+      item.appendChild(dismissBtn);
       list.appendChild(item);
     });
   }
@@ -887,16 +934,16 @@ function renderAll(){
   renderMasterSummary();
 
   renderSummary('elec-summary', ELEC_GROUPS, ELEC_COURSES, state.elec, 'برق-الکترونیک');
-  renderSuggestions('elec-suggest', ELEC_GROUPS, ELEC_COURSES, state.elec);
+  renderSuggestions('elec-suggest', ELEC_GROUPS, ELEC_COURSES, state.elec, 'elec');
   renderGroups('elec-groups', ELEC_GROUPS, ELEC_COURSES, state.elec, 'elec');
 
   renderSummary('islamic-summary', ISLAMIC_GROUPS, ISLAMIC_COURSES, state.islamic, 'معارف اسلامی');
-  renderSuggestions('islamic-suggest', ISLAMIC_GROUPS, ISLAMIC_COURSES, state.islamic,
+  renderSuggestions('islamic-suggest', ISLAMIC_GROUPS, ISLAMIC_COURSES, state.islamic, 'islamic',
     'یادت باشه: سقف انتخاب معارف در هر ترم عادی ۲ واحده (با مجوز مدیر گروه حداکثر ۴ واحد)، پس معمولاً فقط یکی-دو مورد اول این لیست رو همین ترم بردار.');
   renderGroups('islamic-groups', ISLAMIC_GROUPS, ISLAMIC_COURSES, state.islamic, 'islamic');
 
   renderSummary('general-summary', GENERAL_GROUPS, GENERAL_COURSES, state.general, 'دروس عمومی');
-  renderSuggestions('general-suggest', GENERAL_GROUPS, GENERAL_COURSES, state.general);
+  renderSuggestions('general-suggest', GENERAL_GROUPS, GENERAL_COURSES, state.general, 'general');
   renderGroups('general-groups', GENERAL_GROUPS, GENERAL_COURSES, state.general, 'general');
 }
 
@@ -943,6 +990,7 @@ document.getElementById('exportBtn').addEventListener('click', ()=>{
 document.getElementById('importBtn').addEventListener('click', ()=>{
   document.getElementById('importFile').click();
 });
+
 document.getElementById('importFile').addEventListener('change', (e)=>{
   const file = e.target.files[0];
   if(!file) return;
@@ -965,7 +1013,210 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
   e.target.value = '';
 });
 
+/* ============================= FULL CHART EXPORT ============================= */
+
+function chartSections(){
+  return [
+    {label:'دروس پایه، اصلی و تخصصی — برق-الکترونیک', groups: ELEC_GROUPS, courses: ELEC_COURSES, passed: state.elec},
+    {label:'معارف اسلامی', groups: ISLAMIC_GROUPS, courses: ISLAMIC_COURSES, passed: state.islamic},
+    {label:'دروس عمومی', groups: GENERAL_GROUPS, courses: GENERAL_COURSES, passed: state.general},
+  ];
+}
+
+// Builds a real DOM element (used for rasterizing into the PDF via html2canvas)
+function buildChartContentEl(){
+  const wrap = document.createElement('div');
+  wrap.className = 'chart-export';
+
+  const h1 = document.createElement('h1');
+  h1.textContent = 'درخت‌واره دروس من';
+  wrap.appendChild(h1);
+
+  const now = new Date().toLocaleDateString('fa-IR');
+  const {gpa, gradedUnits, gradedCount} = computeGPA();
+  const gpaTxt = gpa===null ? 'ثبت نشده' : gpa.toFixed(2) + ' (از ' + gradedCount + ' درس / ' + gradedUnits + ' واحد نمره‌دار)';
+  const meta = document.createElement('div');
+  meta.className = 'meta';
+  meta.textContent = 'تاریخ تولید: ' + now + ' — معدل کل: ' + gpaTxt;
+  wrap.appendChild(meta);
+
+  const legend = document.createElement('div');
+  legend.className = 'legend';
+  legend.innerHTML = '✓ <b>سبز و پررنگ</b> = گذرونده‌شده &nbsp; | &nbsp; ○ مشکی = هنوز نه';
+  wrap.appendChild(legend);
+
+  chartSections().forEach(sec=>{
+    const h2 = document.createElement('h2');
+    h2.textContent = sec.label;
+    wrap.appendChild(h2);
+    sec.groups.forEach(g=>{
+      const prog = groupProgress(g, sec.courses, sec.passed);
+      const h3 = document.createElement('h3');
+      h3.innerHTML = g.title + ' <span class="rule">— ' + g.rule + ' (' + prog.done + '/' + prog.total + (prog.unitsMode?' واحد':' درس') + ')</span>';
+      wrap.appendChild(h3);
+      const ul = document.createElement('ul');
+      g.ids.forEach(id=>{
+        const c = byId(sec.courses, id);
+        const isP = sec.passed.has(id);
+        const grade = state.grades[id];
+        const gradeTxt = (isP && typeof grade==='number') ? (' — نمره: ' + grade) : '';
+        const li = document.createElement('li');
+        li.className = isP ? 'passed' : '';
+        li.innerHTML = (isP?'✓ ':'○ ') + c.title + ' <span class="u">(' + unitsLabel(c) + ')</span>' + gradeTxt;
+        ul.appendChild(li);
+      });
+      wrap.appendChild(ul);
+    });
+  });
+  return wrap;
+}
+
+// Fallback: full standalone HTML document (opened + auto print-dialog) if PDF libs fail to load
+function buildChartHTML(){
+  let body = '';
+  chartSections().forEach(sec=>{
+    body += `<h2>${sec.label}</h2>`;
+    sec.groups.forEach(g=>{
+      const prog = groupProgress(g, sec.courses, sec.passed);
+      body += `<h3>${g.title} <span class="rule">— ${g.rule} (${prog.done}/${prog.total}${prog.unitsMode?' واحد':' درس'})</span></h3><ul>`;
+      g.ids.forEach(id=>{
+        const c = byId(sec.courses, id);
+        const isPassedC = sec.passed.has(id);
+        const grade = state.grades[id];
+        const gradeTxt = (isPassedC && typeof grade==='number') ? ` — نمره: ${grade}` : '';
+        body += `<li class="${isPassedC?'passed':''}">${isPassedC?'✓ ':'○ '}${c.title} <span class="u">(${unitsLabel(c)})</span>${gradeTxt}</li>`;
+      });
+      body += `</ul>`;
+    });
+  });
+  const now = new Date().toLocaleDateString('fa-IR');
+  const {gpa, gradedUnits, gradedCount} = computeGPA();
+  const gpaTxt = gpa===null ? 'ثبت نشده' : gpa.toFixed(2) + ' (از ' + gradedCount + ' درس / ' + gradedUnits + ' واحد نمره‌دار)';
+  return `<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8">
+<title>درخت‌واره دروس من</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  body{font-family:'Vazirmatn',Tahoma,sans-serif;padding:26px;max-width:820px;margin:0 auto;color:#111;line-height:1.85;}
+  h1{font-size:22px;margin:0 0 2px;}
+  .meta{color:#666;font-size:13px;margin-bottom:6px;}
+  .legend{font-size:12.5px;color:#555;margin-bottom:22px;}
+  .legend b.g{color:#1e7d34;}
+  h2{font-size:18px;margin-top:30px;border-bottom:2px solid #222;padding-bottom:6px;}
+  h3{font-size:14px;margin:16px 0 6px;color:#333;}
+  h3 .rule{font-weight:400;color:#777;font-size:12px;}
+  ul{list-style:none;padding:0;margin:0 0 6px;}
+  li{padding:4px 2px;border-bottom:1px dotted #ddd;font-size:13.5px;color:#111;}
+  li.passed{color:#1e7d34;font-weight:700;}
+  li .u{color:#888;font-weight:400;font-size:12px;}
+  li.passed .u{color:#4caf6f;font-weight:500;}
+  .print-btn{position:fixed;top:14px;left:14px;padding:9px 16px;background:#132a2e;color:#fff;border:0;
+    border-radius:8px;cursor:pointer;font-family:inherit;font-size:13px;}
+  @media print{ .print-btn{display:none;} body{padding:0;} }
+</style></head><body>
+<button class="print-btn" onclick="window.print()">چاپ / ذخیره PDF</button>
+<h1>درخت‌واره دروس من</h1>
+<div class="meta">تاریخ تولید: ${now} — معدل کل: ${gpaTxt}</div>
+<div class="legend">✓ <b class="g">سبز و پررنگ</b> = گذرونده‌شده &nbsp; | &nbsp; ○ مشکی = هنوز نه</div>
+${body}
+</body></html>`;
+}
+
+function openPrintFallback(){
+  const html = buildChartHTML();
+  const w = window.open('', '_blank');
+  if(w){
+    w.document.write(html);
+    w.document.close();
+    setTimeout(()=>{ try{ w.print(); }catch(e){} }, 400);
+  }else{
+    alert('اجازهٔ باز کردن پنجرهٔ جدید داده نشد؛ لطفاً پاپ‌آپ رو برای این صفحه فعال کن و دوباره امتحان کن.');
+  }
+}
+
+async function downloadChartPDF(){
+  const btn = document.getElementById('chartBtn');
+  const original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'در حال ساخت PDF…';
+  let el = null;
+  try{
+    if(!window.html2canvas || !window.jspdf) throw new Error('PDF libraries not loaded');
+    el = buildChartContentEl();
+    el.style.position = 'fixed';
+    el.style.left = '-99999px';
+    el.style.top = '0';
+    document.body.appendChild(el);
+    if(document.fonts && document.fonts.ready){ await document.fonts.ready; }
+
+    const canvas = await window.html2canvas(el, {scale:2, backgroundColor:'#ffffff'});
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p','pt','a4');
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const imgW = pageW;
+    const imgH = canvas.height * imgW / canvas.width;
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
+
+    let position = 0;
+    let heightLeft = imgH;
+    pdf.addImage(imgData, 'JPEG', 0, position, imgW, imgH);
+    heightLeft -= pageH;
+    while(heightLeft > 0){
+      position -= pageH;
+      pdf.addPage();
+      pdf.addImage(imgData, 'JPEG', 0, position, imgW, imgH);
+      heightLeft -= pageH;
+    }
+    pdf.save('درختواره-دروس-من.pdf');
+  }catch(err){
+    console.error('PDF export failed, falling back to print dialog:', err);
+    openPrintFallback();
+  }finally{
+    if(el && el.parentNode) el.parentNode.removeChild(el);
+    btn.disabled = false;
+    btn.textContent = original;
+  }
+}
+
+document.getElementById('chartBtn').addEventListener('click', downloadChartPDF);
+
 renderAll();
+
+/* ============================= PWA: INSTALL + SERVICE WORKER ============================= */
+
+let deferredInstallPrompt = null;
+const installBtn = document.getElementById('installBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Chrome/Edge/Android: stop the automatic mini-infobar and save the event to trigger later
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  installBtn.style.display = 'inline-block';
+});
+
+installBtn.addEventListener('click', async () => {
+  if (!deferredInstallPrompt) return;
+  installBtn.disabled = true;
+  deferredInstallPrompt.prompt();
+  const { outcome } = await deferredInstallPrompt.userChoice;
+  console.log('نتیجه نصب:', outcome); // 'accepted' یا 'dismissed'
+  deferredInstallPrompt = null;
+  installBtn.style.display = 'none';
+  installBtn.disabled = false;
+});
+
+window.addEventListener('appinstalled', () => {
+  installBtn.style.display = 'none';
+  deferredInstallPrompt = null;
+});
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(err => {
+      console.error('ثبت service worker ناموفق بود:', err);
+    });
+  });
+}
 </script>
 </body>
 </html>
