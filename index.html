@@ -68,6 +68,7 @@
     background:rgba(200,151,63,.14); border:1px solid rgba(200,151,63,.35);
     padding:4px 10px; border-radius:999px; margin-bottom:14px;
   }
+    .eyebrow a{color:#1a0dab;text-decoration:none;}
   h1{ font-size:26px; font-weight:800; margin:0 0 8px; letter-spacing:-.01em;}
   header.top p{ margin:0; color:#cdd8d2; font-size:14.5px; max-width:60ch;}
 
@@ -306,7 +307,7 @@ const ELEC_COURSES = [
   {id:'e8', title:'آزمایشگاه فیزیک', t:0, p:1, pre:[], co:['e4']},
 
   {id:'e9', title:'آمار و احتمال مهندسی', t:3, p:0, pre:[], co:['e2']},
-  {id:'e10', title:'زبان تخصصی', t:2, p:0, pre:[], co:[], preText:'زبان عمومی (پیش‌دانشگاهی/ترکیبی ۱-۳)، خارج از این جدول'},
+  {id:'e10', title:'زبان تخصصی', t:2, p:0, pre:[], co:[], preText:'زبان عمومی (پیش‌دانشگاهی/ترکیبی ۱-۳)'},
   {id:'e11', title:'روش‌های محاسباتی در مهندسی برق', t:2, p:0, pre:['e1'], co:['e6']},
   {id:'e12', title:'کارگاه برق', t:0, p:1, pre:['e7'], co:[]},
   {id:'e13', title:'ریاضیات مهندسی', t:3, p:0, pre:['e2','e5'], co:[]},
@@ -334,7 +335,7 @@ const ELEC_COURSES = [
   {id:'e34', title:'الکترونیک ۳', t:3, p:0, pre:['e21'], co:['e19']},
   {id:'e35', title:'الکترونیک دیجیتال', t:3, p:0, pre:[], co:['e20']},
   {id:'e36', title:'فیزیک الکترونیک', t:3, p:0, pre:['e4'], co:['e20']},
-  {id:'e37', title:'پروژه کارشناسی', t:3, p:0, pre:[], co:[], minTotalUnits:95},
+  {id:'e37', title:'پروژه کارشناسی', t:3, p:0, pre:[], co:[], minTotalUnits:95, preText:'گذراندن حداقل 95 واحد'},
 
   {id:'e38', title:'مبانی الکترونیک قدرت', t:3, p:0, pre:['e21'], co:['e23']},
   {id:'e39', title:'پردازش سیگنال‌های دیجیتال', t:3, p:0, pre:['e18'], co:[]},
@@ -352,8 +353,8 @@ const ELEC_COURSES = [
   {id:'e50', title:'آزمایشگاه سیستم‌های مبتنی بر FPGA', t:0, p:1, pre:['e32'], co:['e42']},
 
   {id:'e51', title:'کاربینی (آشنایی با مهندسی برق)', t:1, p:0, pre:[], co:[]},
-  {id:'e52', title:'کارآموزی', t:0, p:2, pre:[], co:[], minTotalUnits:90},
-  {id:'e53', title:'مهارت‌های نرم شغلی', t:2, p:0, pre:[], co:[], minTotalUnits:65},
+  {id:'e52', title:'کارآموزی', t:0, p:2, pre:[], co:[], minTotalUnits:90, preText:'گذراندن حداقل 90 واحد'},
+  {id:'e53', title:'مهارت‌های نرم شغلی', t:2, p:0, pre:[], co:[], minTotalUnits:65, preText:'گذراندن حداقل 65 واحد'},
 
   {id:'e54', title:'اقتصاد مهندسی', t:2, p:0, pre:[], co:[]},
   {id:'e55', title:'مبانی اقتصاد', t:2, p:0, pre:[], co:[]},
@@ -361,8 +362,8 @@ const ELEC_COURSES = [
   {id:'e57', title:'اخلاق مهندسی و محیط زیست', t:1, p:0, pre:[], co:[]},
   {id:'e58', title:'فلسفه علم و فناوری', t:2, p:0, pre:[], co:[]},
   {id:'e59', title:'فیلتر و سنتز مدار', t:3, p:0, pre:['e18','e21'], co:[]},
-  {id:'e60', title:'فیبر نوری', t:3, p:0, pre:['e17'], co:[], note:'هم‌نیاز جدول: «میدانها و امواج» — درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
-  {id:'e61', title:'کنترل ماشین‌های الکتریکی', t:3, p:0, pre:[], co:[], note:'هم‌نیاز جدول: «ماشین‌های الکتریکی ۳» — درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
+  {id:'e60', title:'فیبر نوری', t:3, p:0, pre:['e17'], co:[], coText:'میدان‌ها و امواج', note:'هم‌نیاز جدول: «میدانها و امواج» — درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
+  {id:'e61', title:'کنترل ماشین‌های الکتریکی', t:3, p:0, pre:[], co:[], coText:'ماشین‌های الکتریکی ۳', note:'هم‌نیاز جدول: «ماشین‌های الکتریکی ۳» — درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
   {id:'e62', title:'سیستم‌های فیزیکی-سایبری', t:3, p:0, pre:['e27'], co:[]},
   {id:'e63', title:'برنامه‌سازی پیشرفته', t:3, p:0, pre:['e6'], co:[]},
   {id:'e64', title:'سیستم‌های توزیع انرژی الکتریکی', t:3, p:0, pre:['e25'], co:[]},
@@ -662,6 +663,12 @@ function renderCourseRow(course, courses, passedSet, setKey){
     const meta = document.createElement('div');
     meta.className = 'c-meta';
     meta.innerHTML = '<b>هم‌نیاز:</b> ' + course.co.map(id=>titleOf(courses,id)).join('، ');
+    body.appendChild(meta);
+  }
+  if(course.coText){
+    const meta = document.createElement('div');
+    meta.className = 'c-meta';
+    meta.innerHTML = '<b>هم‌نیاز:</b> ' + course.coText;
     body.appendChild(meta);
   }
   if(course.preText){
@@ -1003,14 +1010,28 @@ function chartSections(){
 }
 
 // Builds one row's cells (used by both the live DOM table and the fallback HTML string)
+function escapeHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Renders a course title, in green if that course has been passed
+function reqTitleHtml(id, sec){
+  const title = escapeHtml(titleOf(sec.courses, id));
+  return sec.passed.has(id) ? '<span class="req-done">' + title + '</span>' : title;
+}
+
 function courseRowData(c, sec){
   const isP = sec.passed.has(c.id);
   const grade = state.grades[c.id];
   const gradeTxt = (isP && typeof grade==='number') ? String(grade) : '-';
   const tUnits = c.variableUnits ? '—' : (typeof c.u === 'number' ? c.u : (c.t||0));
   const pUnits = c.variableUnits ? '—' : (typeof c.u === 'number' ? '-' : (c.p||0));
-  const preTxt = (c.pre && c.pre.length) ? c.pre.map(id=>titleOf(sec.courses,id)).join('، ') : (c.preText || '-');
-  const coTxt = (c.co && c.co.length) ? c.co.map(id=>titleOf(sec.courses,id)).join('، ') : '-';
+  const preTxt = (c.pre && c.pre.length)
+    ? c.pre.map(id=>reqTitleHtml(id, sec)).join('، ')
+    : escapeHtml(c.preText || '-');
+  const coTxt = (c.co && c.co.length)
+    ? c.co.map(id=>reqTitleHtml(id, sec)).join('، ')
+    : escapeHtml(c.coText || '-');
   return {isP, gradeTxt, tUnits, pUnits, preTxt, coTxt};
 }
 
@@ -1062,7 +1083,7 @@ function buildChartHTML(){
   const body = buildChartBodyHTML();
   const now = new Date().toLocaleDateString('fa-IR');
   return `<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8">
-<title>درخت‌واره دروس من</title>
+<title>درختواره دروس</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
@@ -1071,7 +1092,8 @@ function buildChartHTML(){
     -webkit-print-color-adjust:exact; print-color-adjust:exact; color-adjust:exact;}
   *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; color-adjust:exact; }
   h1{font-size:22px;margin:0 0 2px;}
-  .meta{color:#666;font-size:13px;margin-bottom:22px;}
+  .meta{color:#666;font-size:13px;margin:0 0 4px;}
+  .meta:last-of-type{margin-bottom:22px;}
   h2{font-size:18px;margin-top:30px;border-bottom:2px solid #222;padding-bottom:6px;}
   table{width:100%;border-collapse:collapse;margin:0 0 20px;font-size:12.5px;}
   th,td{border:1px solid #999;padding:5px 7px;text-align:center;vertical-align:middle;}
@@ -1079,13 +1101,18 @@ function buildChartHTML(){
   td.title-cell{text-align:right;font-weight:600;}
   td.row-num{width:30px;color:#555;}
   td.units-cell{width:40px;}
-  tr.passed td{background:#eaf6ec;color:#1e7d34;font-weight:700;}
+  tr.passed td{background:#eaf6ec;}
+  tr.passed td.title-cell, tr.passed td.units-cell, tr.passed td.status-cell{color:#1e7d34;font-weight:700;}
+  .req-done{color:#1e7d34;font-weight:700;}
   .group-caption-row td{background:#d8d8d8;font-weight:700;text-align:right;font-size:13px;}
   table.gpa-table{margin-top:-4px;}
   .gpa-row .gpa-label{background:#132a2e;color:#fff;font-weight:700;text-align:right;width:80%;}
   .gpa-row .gpa-value{background:#132a2e;color:#fff;font-weight:700;}
   .print-btn{position:fixed;top:14px;left:14px;padding:9px 16px;background:#132a2e;color:#fff;border:0;
     border-radius:8px;cursor:pointer;font-family:inherit;font-size:13px;}
+  .credit-footer{text-align:center;font-size:10.5px;color:#999;margin-top:26px;}
+  .credit-footer a{color:#1a0dab;text-decoration:none;}
+  
   @media print{
     html, body{ -webkit-print-color-adjust:exact; print-color-adjust:exact; color-adjust:exact; }
     .print-btn{display:none;}
@@ -1097,9 +1124,11 @@ function buildChartHTML(){
   }
 </style></head><body>
 <button class="print-btn" onclick="window.print()">چاپ / ذخیره PDF</button>
-<h1>درخت‌واره دروس من</h1>
+<h1>درختواره دروس</h1>
+<div class="meta">تولید شده بر اساس درختواره الکترونیک 1403 - دانشگاه آزاد تهران شمال</div>
 <div class="meta">تاریخ تولید: ${now}</div>
 ${body}
+<div class="credit-footer">تولید شده توسط <a href="https://a4b3c.github.io/ee__azad/" target="_blank" rel="noopener">واحد یار</a> ❤️</div>
 </body></html>`;
 }
 
