@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>درخت‌واره دروس - واحد یار</title>
+<title>درختواره دروس - واحد یار</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#132a2e">
 <meta name="mobile-web-app-capable" content="yes">
@@ -255,7 +255,7 @@
   <!-- ELECTRONICS PANEL -->
   <section id="panel-elec" class="panel active">
     <div class="disclaimer">
-      داده‌های این بخش از روی درخت‌واره «رشته مهندسی برق - گرایش الکترونیک، مصوبه ۱۷۹ مورخ ۱۴۰۳/۰۴/۱۰، دانشگاه آزاد اسلامی واحد تهران شمال» استخراج شده.
+      داده‌های این بخش از روی درختواره «رشته مهندسی برق - گرایش الکترونیک، مصوبه ۱۷۹ مورخ ۱۴۰۳/۰۴/۱۰، دانشگاه آزاد اسلامی واحد تهران شمال» استخراج شده.
     </div>
     <div id="elec-summary"></div>
     <div id="elec-suggest"></div>
@@ -428,8 +428,8 @@ const GENERAL_COURSES = [
   {id:'x_lang1', title:'زبان ترکیبی ۱', code:'99090', u:1, pre:['x_lang_pre']},
   {id:'x_lang2', title:'زبان ترکیبی ۲', code:'99091', u:1, pre:['x_lang1']},
   {id:'x_lang3', title:'زبان ترکیبی ۳', code:'99092', u:1, pre:['x_lang2']},
-  {id:'x_pe1', title:'تربیت بدنی', code:'93425', u:1, pre:[]},
-  {id:'x_pe2', title:'ورزش ۱', code:'99062', u:1, pre:['x_pe1']},
+  {id:'x_pe1', title:'تربیت بدنی', code:'93425', t:0.5, p:0.5, pre:[]},
+  {id:'x_pe2', title:'ورزش ۱', code:'99062', p:1, pre:['x_pe1']},
   {id:'x_vasaya', title:'اندیشه‌ها و وصایای امام خمینی (ره)', code:'99073', u:1, pre:[]},
 ];
 
@@ -1126,7 +1126,58 @@ function buildChartBodyHTML(){
   body += `<table class="gpa-table"><tbody><tr class="gpa-row">
       <td class="gpa-label">معدل کل</td><td class="gpa-value">${gpaTxt}</td>
     </tr></tbody></table>`;
+  body += buildPassedSummaryHTML();
   return body;
+}
+
+// Builds the "passed units per category" summary shown under the GPA table.
+// Categories are fixed groupings matching the university's official chart layout
+// (not a 1:1 dump of every internal sub-group - e.g. the two "elective specialized"
+// sub-groups are merged into one row, and Islamic/General studies are kept separate
+// even though both live under the "General" tab in the app).
+function buildPassedSummaryHTML(){
+  // Computes passed UNITS and required UNITS for a set of groups. Note: groupProgress()
+  // returns a course *count* (not units) for 'countMin' groups, since their quota is
+  // "pick N courses" - so for those we total the units of passed courses ourselves and
+  // use unitGoal (not group.min) as the required unit total.
+  function sumProgress(groups, courses, passedSet, title){
+    let done = 0, total = 0;
+    groups.forEach(g=>{
+      if(g.kind==='countMin'){
+        const list = g.ids.map(id=>byId(courses,id));
+        done += list.filter(c=>passedSet.has(c.id)).reduce((s,c)=>s+creditUnitsOf(c),0);
+        total += (typeof g.unitGoal==='number') ? g.unitGoal : g.min;
+      }else{
+        const prog = groupProgress(g, courses, passedSet);
+        done += prog.done;
+        total += prog.total;
+      }
+    });
+    return {done, total, title};
+  }
+  function byIds(groups, ids){ return groups.filter(g=>ids.includes(g.id)); }
+
+  const categories = [
+    sumProgress(byIds(ELEC_GROUPS, ['basic']), ELEC_COURSES, state.elec, 'دروس پایه'),
+    sumProgress(byIds(ELEC_GROUPS, ['core']), ELEC_COURSES, state.elec, 'دروس اصلی'),
+    sumProgress(byIds(ELEC_GROUPS, ['reqspec']), ELEC_COURSES, state.elec, 'دروس تخصصی الزامی'),
+    sumProgress(byIds(ELEC_GROUPS, ['elecTheory','elecLab']), ELEC_COURSES, state.elec, 'دروس تخصصی انتخابی'),
+    sumProgress(byIds(ELEC_GROUPS, ['skills']), ELEC_COURSES, state.elec, 'دروس مهارتی - اشتغال‌پذیری'),
+    sumProgress(byIds(ELEC_GROUPS, ['electives']), ELEC_COURSES, state.elec, 'دروس تخصصی اختیاری'),
+    sumProgress(ISLAMIC_GROUPS, ISLAMIC_COURSES, state.islamic, 'دروس معارف'),
+    sumProgress(GENERAL_GROUPS, GENERAL_COURSES, state.general, 'دروس عمومی'),
+  ];
+
+  let rows = '';
+  let grandDone = 0, grandTotal = 0;
+  categories.forEach(cat=>{
+    grandDone += cat.done;
+    grandTotal += cat.total;
+    rows += `<tr><td class="summary-label-cell">${escapeHtml(cat.title)}</td><td class="summary-value-cell">${cat.done} واحد از ${cat.total} واحد</td></tr>`;
+  });
+  rows += `<tr class="summary-total-row"><td class="summary-label-cell">جمع کل</td><td class="summary-value-cell">${grandDone} واحد از ${grandTotal} واحد</td></tr>`;
+  return `<h2>خلاصهٔ واحدهای گذرانده</h2>
+    <table class="summary-table"><tbody>${rows}</tbody></table>`;
 }
 
 // Full standalone HTML document, opened in a new tab and printed (native browser
@@ -1161,6 +1212,11 @@ function buildChartHTML(){
   table.gpa-table{margin-top:-4px;}
   .gpa-row .gpa-label{background:#132a2e;color:#fff;font-weight:700;text-align:right;width:80%;}
   .gpa-row .gpa-value{background:#132a2e;color:#fff;font-weight:700;}
+  table.summary-table{font-size:13px;}
+  table.summary-table td{text-align:right;}
+  .summary-label-cell{width:70%;font-weight:600;}
+  .summary-value-cell{direction:rtl;text-align:right;color:#333;}
+  .summary-total-row td{background:#eaeaea;font-weight:700;}
   .print-btn{position:fixed;top:14px;left:14px;padding:9px 16px;background:#132a2e;color:#fff;border:0;
     border-radius:8px;cursor:pointer;font-family:inherit;font-size:13px;}
   .credit-footer{text-align:center;font-size:10.5px;color:#999;margin-top:26px;}
