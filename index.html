@@ -177,6 +177,7 @@
   .c-body{ flex:1; min-width:0;}
   .c-top{ display:flex; align-items:center; flex-wrap:wrap; gap:8px 10px;}
   .c-title{ font-weight:600; font-size:14.5px; cursor:pointer; }
+  .c-code{ font-weight:500; font-size:12px; color:#8a8175; }
   .c-units{ font-size:11.5px; color:#8a8175; white-space:nowrap;}
   .c-status{
     font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px; white-space:nowrap;
@@ -295,79 +296,79 @@
 // minTotalUnits = special condition requiring N total passed units across this dataset,
 // note = extra note, variableUnits = true when units aren't fixed in the source table.
 const ELEC_COURSES = [
-  {id:'e1', title:'ریاضی عمومی ۱', t:3, p:0, pre:[], co:[]},
-  {id:'e2', title:'ریاضی عمومی ۲', t:3, p:0, pre:['e1'], co:[]},
-  {id:'e3', title:'فیزیک عمومی ۱ (حرارت و مکانیک)', t:3, p:0, pre:[], co:[]},
-  {id:'e4', title:'فیزیک عمومی ۲ (الکتریسیته و مغناطیس)', t:3, p:0, pre:[], co:[]},
-  {id:'e5', title:'معادلات دیفرانسیل', t:3, p:0, pre:[], co:['e2']},
-  {id:'e6', title:'برنامه‌سازی کامپیوتر', t:3, p:0, pre:[], co:[]},
-  {id:'e7', title:'کارگاه عمومی', t:0, p:1, pre:[], co:[]},
-  {id:'e8', title:'آزمایشگاه فیزیک', t:0, p:1, pre:[], co:['e4']},
+  {id:'e1', title:'ریاضی عمومی ۱', code:'7000031867', t:3, p:0, pre:[], co:[]},
+  {id:'e2', title:'ریاضی عمومی ۲', code:'7000031868', t:3, p:0, pre:['e1'], co:[]},
+  {id:'e3', title:'فیزیک عمومی ۱ (حرارت و مکانیک)', code:'7000031869', t:3, p:0, pre:[], co:[]},
+  {id:'e4', title:'فیزیک عمومی ۲ (الکتریسیته و مغناطیس)', code:'7000031870', t:3, p:0, pre:[], co:[]},
+  {id:'e5', title:'معادلات دیفرانسیل', code:'7000031871', t:3, p:0, pre:[], co:['e2']},
+  {id:'e6', title:'برنامه‌سازی کامپیوتر', code:'7000031872', t:3, p:0, pre:[], co:[]},
+  {id:'e7', title:'کارگاه عمومی', code:'7000031874', t:0, p:1, pre:[], co:[]},
+  {id:'e8', title:'آزمایشگاه فیزیک', code:'7000031873', t:0, p:1, pre:[], co:['e4']},
 
-  {id:'e9', title:'آمار و احتمال مهندسی', t:3, p:0, pre:[], co:['e2']},
-  {id:'e10', title:'زبان تخصصی', t:2, p:0, pre:[], co:[], preText:'زبان عمومی (پیش‌دانشگاهی/ترکیبی ۱-۳)'},
-  {id:'e11', title:'روش‌های محاسباتی در مهندسی برق', t:2, p:0, pre:['e1'], co:['e6']},
-  {id:'e12', title:'کارگاه برق', t:0, p:1, pre:['e7'], co:[]},
-  {id:'e13', title:'ریاضیات مهندسی', t:3, p:0, pre:['e2','e5'], co:[]},
-  {id:'e14', title:'هوش مصنوعی و تحول دیجیتال', t:0, p:2, pre:['e6','e9'], co:[]},
-  {id:'e15', title:'مدارهای الکتریکی ۱', t:3, p:0, pre:['e4','e5'], co:[]},
-  {id:'e16', title:'مدارهای الکتریکی ۲', t:3, p:0, pre:['e15'], co:[]},
-  {id:'e17', title:'الکترومغناطیس', t:3, p:0, pre:['e2','e4'], co:[]},
-  {id:'e18', title:'سیگنال‌ها و سیستم‌ها', t:3, p:0, pre:['e13'], co:[]},
-  {id:'e19', title:'سیستم‌های کنترل خطی', t:3, p:0, pre:['e18'], co:[]},
-  {id:'e20', title:'الکترونیک ۱', t:3, p:0, pre:['e15'], co:[]},
-  {id:'e21', title:'الکترونیک ۲', t:3, p:0, pre:['e20'], co:[]},
-  {id:'e22', title:'ماشین‌های الکتریکی ۱', t:2, p:0, pre:['e15','e17'], co:[]},
-  {id:'e23', title:'ماشین‌های الکتریکی ۲', t:2, p:0, pre:['e22'], co:[]},
-  {id:'e24', title:'اصول سیستم‌های مخابراتی', t:3, p:0, pre:['e9','e18'], co:[]},
-  {id:'e25', title:'سیستم‌های انرژی الکتریکی', t:3, p:0, pre:[], co:['e23']},
-  {id:'e26', title:'مدارهای منطقی', t:3, p:0, pre:[], co:['e20']},
-  {id:'e27', title:'معماری کامپیوتر و میکروکنترلر', t:3, p:0, pre:['e26'], co:[]},
-  {id:'e28', title:'آزمایشگاه مدارهای الکتریکی و اندازه‌گیری', t:0, p:1, pre:[], co:['e16']},
-  {id:'e29', title:'آزمایشگاه ماشین‌های الکتریکی ۱', t:0, p:1, pre:['e22'], co:[]},
-  {id:'e30', title:'آزمایشگاه الکترونیک ۱', t:0, p:1, pre:['e28'], co:['e21']},
-  {id:'e31', title:'آزمایشگاه سیستم‌های کنترل خطی', t:0, p:1, pre:['e19'], co:[]},
+  {id:'e9', title:'آمار و احتمال مهندسی', code:'7000031881', t:3, p:0, pre:[], co:['e2']},
+  {id:'e10', title:'زبان تخصصی', code:'7000031875', t:2, p:0, pre:[], co:[], preText:'زبان عمومی (پیش‌دانشگاهی/ترکیبی ۱-۳)'},
+  {id:'e11', title:'روش‌های محاسباتی در مهندسی برق', code:'7000031876', t:2, p:0, pre:['e1'], co:['e6']},
+  {id:'e12', title:'کارگاه برق', code:'7000031893', t:0, p:1, pre:['e7'], co:[]},
+  {id:'e13', title:'ریاضیات مهندسی', code:'7000031880', t:3, p:0, pre:['e2','e5'], co:[]},
+  {id:'e14', title:'هوش مصنوعی و تحول دیجیتال', code:'7000031879', t:0, p:2, pre:['e6','e9'], co:[]},
+  {id:'e15', title:'مدارهای الکتریکی ۱', code:'7000031882', t:3, p:0, pre:['e4','e5'], co:[]},
+  {id:'e16', title:'مدارهای الکتریکی ۲', code:'7000031883', t:3, p:0, pre:['e15'], co:[]},
+  {id:'e17', title:'الکترومغناطیس', code:'7000031884', t:3, p:0, pre:['e2','e4'], co:[]},
+  {id:'e18', title:'سیگنال‌ها و سیستم‌ها', code:'7000031885', t:3, p:0, pre:['e13'], co:[]},
+  {id:'e19', title:'سیستم‌های کنترل خطی', code:'7000031886', t:3, p:0, pre:['e18'], co:[]},
+  {id:'e20', title:'الکترونیک ۱', code:'7000031887', t:3, p:0, pre:['e15'], co:[]},
+  {id:'e21', title:'الکترونیک ۲', code:'7000031888', t:3, p:0, pre:['e20'], co:[]},
+  {id:'e22', title:'ماشین‌های الکتریکی ۱', code:'7000031877', t:2, p:0, pre:['e15','e17'], co:[]},
+  {id:'e23', title:'ماشین‌های الکتریکی ۲', code:'7000031878', t:2, p:0, pre:['e22'], co:[]},
+  {id:'e24', title:'اصول سیستم‌های مخابراتی', code:'7000031889', t:3, p:0, pre:['e9','e18'], co:[]},
+  {id:'e25', title:'سیستم‌های انرژی الکتریکی', code:'7000031890', t:3, p:0, pre:[], co:['e23']},
+  {id:'e26', title:'مدارهای منطقی', code:'7000031891', t:3, p:0, pre:[], co:['e20']},
+  {id:'e27', title:'معماری کامپیوتر و میکروکنترلر', code:'7000031892', t:3, p:0, pre:['e26'], co:[]},
+  {id:'e28', title:'آزمایشگاه مدارهای الکتریکی و اندازه‌گیری', code:'7000031894', t:0, p:1, pre:[], co:['e16']},
+  {id:'e29', title:'آزمایشگاه ماشین‌های الکتریکی ۱', code:'7000031895', t:0, p:1, pre:['e22'], co:[]},
+  {id:'e30', title:'آزمایشگاه الکترونیک ۱', code:'7000031896', t:0, p:1, pre:['e28'], co:['e21']},
+  {id:'e31', title:'آزمایشگاه سیستم‌های کنترل خطی', code:'7000031897', t:0, p:1, pre:['e19'], co:[]},
   {id:'e32', title:'آزمایشگاه مدارهای منطقی', t:0, p:1, pre:[], co:['e26']},
   {id:'e33', title:'آزمایشگاه معماری کامپیوتر و میکروکنترلر', t:0, p:1, pre:['e32'], co:['e27']},
 
-  {id:'e34', title:'الکترونیک ۳', t:3, p:0, pre:['e21'], co:['e19']},
+  {id:'e34', title:'الکترونیک ۳', code:'7000031900', t:3, p:0, pre:['e21'], co:['e19']},
   {id:'e35', title:'الکترونیک دیجیتال', t:3, p:0, pre:[], co:['e20']},
-  {id:'e36', title:'فیزیک الکترونیک', t:3, p:0, pre:['e4'], co:['e20']},
-  {id:'e37', title:'پروژه کارشناسی', t:3, p:0, pre:[], co:[], minTotalUnits:95, preText:'گذراندن حداقل 95 واحد'},
+  {id:'e36', title:'فیزیک الکترونیک', code:'7000031902', t:3, p:0, pre:['e4'], co:['e20']},
+  {id:'e37', title:'پروژه کارشناسی', code:'7000035787', t:3, p:0, pre:[], co:[], minTotalUnits:95, preText:'گذراندن حداقل 95 واحد'},
 
-  {id:'e38', title:'مبانی الکترونیک قدرت', t:3, p:0, pre:['e21'], co:['e23']},
-  {id:'e39', title:'پردازش سیگنال‌های دیجیتال', t:3, p:0, pre:['e18'], co:[]},
-  {id:'e40', title:'مدارهای مخابراتی', t:3, p:0, pre:['e20','e24'], co:[]},
-  {id:'e41', title:'مدارهای پالس و دیجیتال', t:3, p:0, pre:['e20','e26'], co:[]},
+  {id:'e38', title:'مبانی الکترونیک قدرت', code:'7000031919', t:3, p:0, pre:['e21'], co:['e23']},
+  {id:'e39', title:'پردازش سیگنال‌های دیجیتال', code:'7000031904', t:3, p:0, pre:['e18'], co:[]},
+  {id:'e40', title:'مدارهای مخابراتی', code:'7000031905', t:3, p:0, pre:['e20','e24'], co:[]},
+  {id:'e41', title:'مدارهای پالس و دیجیتال', code:'7000031906', t:3, p:0, pre:['e20','e26'], co:[]},
   {id:'e42', title:'سیستم‌های مبتنی بر FPGA', t:3, p:0, pre:['e26'], co:[]},
   {id:'e43', title:'طراحی توأم سخت‌افزار و نرم‌افزار', t:3, p:0, pre:['e27'], co:[]},
-  {id:'e44', title:'مبانی یادگیری ماشین', t:3, p:0, pre:['e6','e9'], co:[]},
+  {id:'e44', title:'مبانی یادگیری ماشین', code:'7000031910', t:3, p:0, pre:['e6','e9'], co:[]},
 
-  {id:'e45', title:'آزمایشگاه الکترونیک ۲', t:0, p:1, pre:['e30','e21'], co:[]},
-  {id:'e46', title:'آزمایشگاه الکترونیک ۳', t:0, p:1, pre:['e30','e34'], co:[]},
-  {id:'e47', title:'آزمایشگاه مدارهای پالس و دیجیتال', t:0, p:1, pre:['e30','e41'], co:[]},
+  {id:'e45', title:'آزمایشگاه الکترونیک ۲', code:'1285178886', t:0, p:1, pre:['e30','e21'], co:[]},
+  {id:'e46', title:'آزمایشگاه الکترونیک ۳', code:'7000031912', t:0, p:1, pre:['e30','e34'], co:[]},
+  {id:'e47', title:'آزمایشگاه مدارهای پالس و دیجیتال', code:'7000031913', t:0, p:1, pre:['e30','e41'], co:[]},
   {id:'e48', title:'آزمایشگاه مبانی الکترونیک قدرت', t:0, p:1, pre:['e30','e38'], co:[]},
-  {id:'e49', title:'آزمایشگاه مدارهای مخابراتی', t:0, p:1, pre:['e30','e40'], co:[]},
+  {id:'e49', title:'آزمایشگاه مدارهای مخابراتی', code:'7000031915', t:0, p:1, pre:['e30','e40'], co:[]},
   {id:'e50', title:'آزمایشگاه سیستم‌های مبتنی بر FPGA', t:0, p:1, pre:['e32'], co:['e42']},
 
-  {id:'e51', title:'کاربینی (آشنایی با مهندسی برق)', t:1, p:0, pre:[], co:[]},
-  {id:'e52', title:'کارآموزی', t:0, p:2, pre:[], co:[], minTotalUnits:90, preText:'گذراندن حداقل 90 واحد'},
+  {id:'e51', title:'کاربینی (آشنایی با مهندسی برق)', code:'7000035107', t:1, p:0, pre:[], co:[]},
+  {id:'e52', title:'کارآموزی', code:'7000035788', t:0, p:2, pre:[], co:[], minTotalUnits:90, preText:'گذراندن حداقل 90 واحد'},
   {id:'e53', title:'مهارت‌های نرم شغلی', t:2, p:0, pre:[], co:[], minTotalUnits:65, preText:'گذراندن حداقل 65 واحد'},
 
-  {id:'e54', title:'اقتصاد مهندسی', t:2, p:0, pre:[], co:[]},
+  {id:'e54', title:'اقتصاد مهندسی', code:'7000031999', t:2, p:0, pre:[], co:[]},
   {id:'e55', title:'مبانی اقتصاد', t:2, p:0, pre:[], co:[]},
   {id:'e56', title:'اندازه‌گیری الکتریکی', t:2, p:0, pre:['e15'], co:[]},
   {id:'e57', title:'اخلاق مهندسی و محیط زیست', t:1, p:0, pre:[], co:[]},
   {id:'e58', title:'فلسفه علم و فناوری', t:2, p:0, pre:[], co:[]},
   {id:'e59', title:'فیلتر و سنتز مدار', t:3, p:0, pre:['e18','e21'], co:[]},
-  {id:'e60', title:'فیبر نوری', t:3, p:0, pre:['e17'], co:[], coText:'میدان‌ها و امواج', note:'هم‌نیاز جدول: «میدانها و امواج» - درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
-  {id:'e61', title:'کنترل ماشین‌های الکتریکی', t:3, p:0, pre:[], co:[], coText:'ماشین‌های الکتریکی ۳', note:'هم‌نیاز جدول: «ماشین‌های الکتریکی ۳» - درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
+  {id:'e60', title:'فیبر نوری', t:3, p:0, pre:['e17'], co:[], coText:'میدان‌ها و امواج (7000031946)', note:'نکته : «میدانها و امواج» - درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
+  {id:'e61', title:'کنترل ماشین‌های الکتریکی', t:3, p:0, pre:[], co:[], coText:'ماشین‌های الکتریکی ۳ (7000031917)', note:'نکته : «ماشین‌های الکتریکی ۳» - درسی خارج از این فهرست، با گروه آموزشی هماهنگ کن.'},
   {id:'e62', title:'سیستم‌های فیزیکی-سایبری', t:3, p:0, pre:['e27'], co:[]},
-  {id:'e63', title:'برنامه‌سازی پیشرفته', t:3, p:0, pre:['e6'], co:[]},
+  {id:'e63', title:'برنامه‌سازی پیشرفته',code:'7000031992', t:3, p:0, pre:['e6'], co:[]},
   {id:'e64', title:'سیستم‌های توزیع انرژی الکتریکی', t:3, p:0, pre:['e25'], co:[]},
   {id:'e65', title:'مبانی خودروهای برقی و ترکیبی', t:3, p:0, pre:['e23'], co:[]},
-  {id:'e_defa', title:'دفاع مقدس', t:2, p:0, pre:[], co:[], note:'طبق جدول باید حتماً به‌عنوان یکی از دروس اختیاری اخذ شود.'},
-  {id:'e_karafarini', title:'کارآفرینی', t:3, p:0, pre:[], co:[], note:'جزو دروس تخصصی اختیاری محسوب می‌شود.'},
+  {id:'e_defa', title:'دفاع مقدس', code:'90881', t:2, p:0, pre:[], co:[], note:'طبق جدول باید حتماً به‌عنوان یکی از دروس اختیاری اخذ شود.'},
+  {id:'e_karafarini', title:'کارآفرینی', code:'55139', t:3, p:0, pre:[], co:[], note:'جزو دروس تخصصی اختیاری محسوب می‌شود.'},
 ];
 
 const ELEC_GROUPS = [
@@ -382,30 +383,30 @@ const ELEC_GROUPS = [
 
 // ---------- Islamic Studies electives ----------
 const ISLAMIC_COURSES = [
-  {id:'i1', title:'اندیشه اسلامی ۱ (مبدأ و معاد)', u:2, pre:[]},
-  {id:'i2', title:'اندیشه اسلامی ۲ (نبوت و امامت)', u:2, pre:['i1']},
-  {id:'i3', title:'انسان در اسلام', u:2, pre:[]},
-  {id:'i4', title:'حقوق اجتماعی و سیاسی در اسلام', u:2, pre:[]},
+  {id:'i1', title:'اندیشه اسلامی ۱ (مبدأ و معاد)', code:'90610', u:2, pre:[]},
+  {id:'i2', title:'اندیشه اسلامی ۲ (نبوت و امامت)', code:'98841', u:2, pre:['i1']},
+  {id:'i3', title:'انسان در اسلام', code:'90613', u:2, pre:[]},
+  {id:'i4', title:'حقوق اجتماعی و سیاسی در اسلام', code:'90063', u:2, pre:[]},
 
-  {id:'i5', title:'اخلاق اسلامی (مبانی و مفاهیم)', u:2, pre:[]},
+  {id:'i5', title:'اخلاق اسلامی (مبانی و مفاهیم)', code:'98961', u:2, pre:[]},
   {id:'i6', title:'اخلاق خانواده', u:2, pre:[]},
-  {id:'i7', title:'فلسفهٔ اخلاق (با تکیه بر مباحث تربیتی)', u:2, pre:[]},
-  {id:'i8', title:'آیین زندگی (اخلاق کاربردی)', u:2, pre:[]},
-  {id:'i9', title:'عرفان عملی در اسلام', u:2, pre:[]},
+  {id:'i7', title:'فلسفهٔ اخلاق (با تکیه بر مباحث تربیتی)', code:'98982', u:2, pre:[]},
+  {id:'i8', title:'آیین زندگی (اخلاق کاربردی)', code:'98923', u:2, pre:[]},
+  {id:'i9', title:'عرفان عملی در اسلام', code:'98949', u:2, pre:[]},
 
-  {id:'i10', title:'انقلاب اسلامی ایران', u:2, pre:[]},
-  {id:'i11', title:'آشنایی با قانون اساسی جمهوری اسلامی ایران', u:2, pre:[]},
-  {id:'i12', title:'اندیشه‌های سیاسی امام خمینی (ره)', u:2, pre:[], note:'با درسِ ۱ واحدیِ اجباریِ «اندیشه‌ها و وصایای امام خمینی» فرق داره - اون یکی جزو تب «دروس عمومی»ه و جدا الزامیه.'},
+  {id:'i10', title:'انقلاب اسلامی ایران', code:'90755', u:2, pre:[]},
+  {id:'i11', title:'آشنایی با قانون اساسی جمهوری اسلامی ایران', code:'90046', u:2, pre:[]},
+  {id:'i12', title:'اندیشه‌های سیاسی امام خمینی (ره)', code:'90064', u:2, pre:[], note:'با درسِ ۱ واحدیِ اجباریِ «اندیشه‌ها و وصایای امام خمینی» فرق داره - اون یکی جزو تب «دروس عمومی»ه و جدا الزامیه.'},
 
-  {id:'i13', title:'فرهنگ و تمدن اسلام و ایران', u:2, pre:[], note:'برای ورودی‌های ۱۳۸۹ به بعد عملاً الزامیه (همون «تاریخ فرهنگ و تمدن اسلام و ایران/اسلامی» قبلیه).'},
-  {id:'i14', title:'تاریخ تحلیلی صدر اسلام', u:2, pre:[], exclusiveWith:'i15'},
-  {id:'i15', title:'تاریخ امامت', u:2, pre:[], exclusiveWith:'i14'},
+  {id:'i13', title:'فرهنگ و تمدن اسلام و ایران', code:'92381', u:2, pre:[], note:'برای ورودی‌های ۱۳۸۹ به بعد عملاً الزامیه (همون «تاریخ فرهنگ و تمدن اسلام و ایران/اسلامی» قبلیه).'},
+  {id:'i14', title:'تاریخ تحلیلی صدر اسلام', code:'99041', u:2, pre:[], exclusiveWith:'i15'},
+  {id:'i15', title:'تاریخ امامت', code:'90121', u:2, pre:[], exclusiveWith:'i14'},
 
-  {id:'i16', title:'تفسیر موضوعی قرآن کریم', u:2, pre:[]},
-  {id:'i17', title:'تفسیر موضوعی نهج‌البلاغه', u:2, pre:[]},
+  {id:'i16', title:'تفسیر موضوعی قرآن کریم', code:'90763', u:2, pre:[]},
+  {id:'i17', title:'تفسیر موضوعی نهج‌البلاغه', code:'90313', u:2, pre:[]},
 
-  {id:'i18', title:'دانش خانواده و جمعیت', u:2, pre:[]},
-  {id:'i19', title:'انس با قرآن کریم', u:1, pre:[], note:'باید در ۱۶ جلسهٔ ۲ ساعته برگزار بشه؛ می‌تونی مازاد بر سقف واحدهای ترم هم برش داری.'},
+  {id:'i18', title:'دانش خانواده و جمعیت', code:'90128', u:2, pre:[]},
+  {id:'i19', title:'انس با قرآن کریم', code:'99081', u:1, pre:[], note:'باید در ۱۶ جلسهٔ ۲ ساعته برگزار بشه؛ می‌تونی مازاد بر سقف واحدهای ترم هم برش داری.'},
 ];
 
 const ISLAMIC_GROUPS = [
@@ -422,14 +423,14 @@ const ISLAMIC_GROUPS = [
 // فقط پیش‌نیاز زبان ترکیبی ۱ است. «انس با قرآن کریم» تکراریه و در تب معارف اسلامی موجوده،
 // اینجا دوباره اضافه نشده.
 const GENERAL_COURSES = [
-  {id:'x_farsi', title:'فارسی عمومی', u:3, pre:[]},
-  {id:'x_lang_pre', title:'زبان پیش‌دانشگاهی', u:2, pre:[], excludeFromTotal:true, note:'واحد جبرانی است؛ در مجموع ۱۴۴ واحد فارغ‌التحصیلی محاسبه نمی‌شود، فقط پیش‌نیاز زبان ترکیبی ۱ است.'},
-  {id:'x_lang1', title:'زبان ترکیبی ۱', u:1, pre:['x_lang_pre']},
-  {id:'x_lang2', title:'زبان ترکیبی ۲', u:1, pre:['x_lang1']},
-  {id:'x_lang3', title:'زبان ترکیبی ۳', u:1, pre:['x_lang2']},
-  {id:'x_pe1', title:'تربیت بدنی', u:1, pre:[]},
-  {id:'x_pe2', title:'ورزش ۱', u:1, pre:['x_pe1']},
-  {id:'x_vasaya', title:'اندیشه‌ها و وصایای امام خمینی (ره)', u:1, pre:[]},
+  {id:'x_farsi', title:'فارسی عمومی', code:'90029', u:3, pre:[]},
+  {id:'x_lang_pre', title:'زبان پیش‌دانشگاهی', code:'99093', u:2, pre:[], excludeFromTotal:true, note:'واحد جبرانی است؛ در مجموع ۱۴۴ واحد فارغ‌التحصیلی محاسبه نمی‌شود، فقط پیش‌نیاز زبان ترکیبی ۱ است.'},
+  {id:'x_lang1', title:'زبان ترکیبی ۱', code:'99090', u:1, pre:['x_lang_pre']},
+  {id:'x_lang2', title:'زبان ترکیبی ۲', code:'99091', u:1, pre:['x_lang1']},
+  {id:'x_lang3', title:'زبان ترکیبی ۳', code:'99092', u:1, pre:['x_lang2']},
+  {id:'x_pe1', title:'تربیت بدنی', code:'93425', u:1, pre:[]},
+  {id:'x_pe2', title:'ورزش ۱', code:'99062', u:1, pre:['x_pe1']},
+  {id:'x_vasaya', title:'اندیشه‌ها و وصایای امام خمینی (ره)', code:'99073', u:1, pre:[]},
 ];
 
 const GENERAL_GROUPS = [
@@ -648,7 +649,7 @@ function renderCourseRow(course, courses, passedSet, setKey){
 
   const title = document.createElement('span');
   title.className = 'c-title';
-  title.textContent = course.title;
+  title.innerHTML = escapeHtml(course.title) + (course.code ? ' <span class="c-code num">(' + escapeHtml(course.code) + ')</span>' : '');
   title.addEventListener('click', ()=>stamp.click());
 
   const units = document.createElement('span');
@@ -946,7 +947,8 @@ function renderSuggestions(containerId, groups, courses, passedSet, key, capNote
       const reasonHtml = s.reasons.map(r=>
         `<div class="r${r.warn ? ' r-warn' : ''}">- ${escapeHtml(r.text)}</div>`
       ).join('');
-      body.innerHTML = `<div class="t">${s.course.title} <span class="s-units">- ${unitsLabel(s.course)}</span></div>${reasonHtml}`;
+      const codeHtml = s.course.code ? ` <span class="s-units num">(${escapeHtml(s.course.code)})</span>` : '';
+      body.innerHTML = `<div class="t">${escapeHtml(s.course.title)}${codeHtml} <span class="s-units">- ${unitsLabel(s.course)}</span></div>${reasonHtml}`;
       const dismissBtn = document.createElement('button');
       dismissBtn.className = 'dismiss-btn';
       dismissBtn.title = 'فعلاً نمی‌تونم این رو بردارم - یکی دیگه پیشنهاد بده';
@@ -1092,12 +1094,12 @@ function buildChartBodyHTML(){
   chartSections().forEach(sec=>{
     body += `<h2>${sec.label}</h2>`;
     body += `<table><thead><tr>
-      <th>ردیف</th><th>عنوان درس</th><th>واحد نظری</th><th>واحد عملی</th>
+      <th>ردیف</th><th>عنوان درس</th><th>کد درس</th><th>واحد نظری</th><th>واحد عملی</th>
       <th>پیش‌نیاز</th><th>هم‌نیاز</th><th>نمره</th></tr></thead><tbody>`;
     let rowNum = 1;
     sec.groups.forEach(g=>{
       const prog = groupProgress(g, sec.courses, sec.passed);
-      body += `<tr class="group-caption-row"><td colspan="7">${g.title} - ${g.rule} (${prog.done}/${prog.total}${prog.unitsMode?' واحد':' درس'})</td></tr>`;
+      body += `<tr class="group-caption-row"><td colspan="8">${g.title} - ${g.rule} (${prog.done}/${prog.total}${prog.unitsMode?' واحد':' درس'})</td></tr>`;
       g.ids.forEach(id=>{
         const c = byId(sec.courses, id);
         const {isP, gradeTxt, tUnits, pUnits, preTxt, coTxt} = courseRowData(c, sec);
@@ -1108,7 +1110,8 @@ function buildChartBodyHTML(){
         }
         body += `<tr class="${isP?'passed':''}">
           <td class="row-num">${rowNum++}</td>
-          <td class="title-cell">${c.title}</td>
+          <td class="title-cell">${escapeHtml(c.title)}</td>
+          <td class="code-cell">${c.code ? escapeHtml(c.code) : '-'}</td>
           <td class="units-cell">${tUnits}</td>
           <td class="units-cell">${pUnits}</td>
           <td>${preTxt}</td>
@@ -1148,10 +1151,11 @@ function buildChartHTML(){
   th,td{border:1px solid #999;padding:5px 7px;text-align:center;vertical-align:middle;}
   thead th{background:#e4e4e4;font-weight:700;}
   td.title-cell{text-align:right;font-weight:600;}
+  td.code-cell{width:110px;font-size:11.5px;color:#555;direction:ltr;}
   td.row-num{width:30px;color:#555;}
   td.units-cell{width:40px;}
   tr.passed td{background:#eaf6ec;}
-  tr.passed td.title-cell, tr.passed td.units-cell, tr.passed td.status-cell{color:#1e7d34;font-weight:700;}
+  tr.passed td.title-cell, tr.passed td.units-cell, tr.passed td.status-cell, tr.passed td.code-cell{color:#1e7d34;font-weight:700;}
   .req-done{color:#1e7d34;font-weight:700;}
   .group-caption-row td{background:#d8d8d8;font-weight:700;text-align:right;font-size:13px;}
   table.gpa-table{margin-top:-4px;}
